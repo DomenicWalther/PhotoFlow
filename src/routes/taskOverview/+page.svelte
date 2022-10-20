@@ -10,10 +10,26 @@
 	let openModal = false;
 	let isUpdateTaskOpen = false;
 	let UpdateTaskValues = [];
+	let sortSelected = 'duedate';
+	let sortOnce = true;
 
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
-	$: $tasks && sortTasks();
+	const sort_by = (field, reverse, primer) => {
+		const key = primer
+			? function (x) {
+					return primer(x[field]);
+			  }
+			: function (x) {
+					return x[field];
+			  };
+
+		reverse = !reverse ? 1 : -1;
+
+		return function (a, b) {
+			return (a = key(a)), (b = key(b)), reverse * ((a > b) - (b > a));
+		};
+	};
 
 	onMount(async () => {
 		getAndCreateTasks();
@@ -56,14 +72,21 @@
 		} else {
 			$tasks = [];
 		}
+		$tasks = $tasks.sort(sort_by('duedate', false));
 	}
 
-	function sortTasks() {
-		$tasks.sort(function (a, b) {
-			return new Date(a.duedate) - new Date(b.duedate);
-		});
+	function sortTasks(field, reverse, primer) {
+		if (sortSelected === field) {
+			if (sortOnce) {
+				reverse = !reverse;
+			}
+			sortOnce = !sortOnce;
+		} else {
+			sortOnce = true;
+		}
+		$tasks = $tasks.sort(sort_by(field, reverse, primer));
+		sortSelected = field;
 	}
-
 	async function getAndCreateTasks() {
 		createTasks(await getCurrentTasks());
 	}
@@ -100,9 +123,7 @@
 
 	function updateTaskFromModal(event) {
 		let id, name, duedate, extra, status;
-		console.log('Event Values: ', event.detail.values);
 		[id, name, duedate, extra, status] = event.detail.values;
-		console.log('ID: ', id);
 		updateTask(id, status, name, duedate, extra);
 	}
 </script>
@@ -125,10 +146,30 @@
 		<table>
 			<thead>
 				<tr>
-					<th>Familie</th>
-					<th>Datum</th>
-					<th>Status</th>
-					<th>Zusätzliches</th>
+					<th on:click={() => sortTasks('name', false, (a) => a.toUpperCase())}
+						>Familie<i
+							class:caret-down={sortSelected === 'name' && sortOnce}
+							class:caret-up={sortSelected === 'name' && !sortOnce}
+						/></th
+					>
+					<th on:click={() => sortTasks('duedate', false)}
+						>Datum<i
+							class:caret-down={sortSelected === 'duedate' && sortOnce}
+							class:caret-up={sortSelected === 'duedate' && !sortOnce}
+						/></th
+					>
+					<th on:click={() => sortTasks('status', false, (a) => a.toUpperCase())}
+						>Status<i
+							class:caret-down={sortSelected === 'status' && sortOnce}
+							class:caret-up={sortSelected === 'status' && !sortOnce}
+						/></th
+					>
+					<th on:click={() => sortTasks('specialassignments', false, (a) => a.toUpperCase())}
+						>Zusätzliches<i
+							class:caret-down={sortSelected === 'specialassignments' && sortOnce}
+							class:caret-up={sortSelected === 'specialassignments' && !sortOnce}
+						/></th
+					>
 					<th>Optionen</th>
 				</tr>
 			</thead>
@@ -230,5 +271,52 @@
 
 	tr:nth-child(even) {
 		background-color: #e9e9e9;
+	}
+
+	.caret-down {
+		position: relative;
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			border-top: 30px solid white;
+			border-left: 30px solid transparent;
+			border-right: 30px solid transparent;
+			transform: scale(0.4);
+		}
+		&:after {
+			content: '';
+			position: absolute;
+			left: 1px;
+			top: 0;
+			border-top: 29px solid white;
+			border-left: 29px solid transparent;
+			border-right: 29px solid transparent;
+			transform: scale(0.4);
+		}
+	}
+	.caret-up {
+		position: relative;
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			border-bottom: 30px solid white;
+			border-left: 30px solid transparent;
+			border-right: 30px solid transparent;
+			transform: scale(0.4);
+		}
+		&:after {
+			content: '';
+			position: absolute;
+			left: 1px;
+			top: 0;
+			border-bottom: 29px solid white;
+			border-left: 29px solid transparent;
+			border-right: 29px solid transparent;
+			transform: scale(0.4);
+		}
 	}
 </style>

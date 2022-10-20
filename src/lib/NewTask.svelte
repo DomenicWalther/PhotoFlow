@@ -6,6 +6,7 @@
 
 	let value = new Date();
 	let familyName, extras, status;
+	extras = '';
 
 	const dispatch = createEventDispatcher();
 
@@ -35,7 +36,7 @@
 		event.target.reset();
 		familyName = '';
 		extras = '';
-		taskDueDate = new Date();
+		value = new Date();
 	};
 </script>
 
