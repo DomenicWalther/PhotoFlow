@@ -246,6 +246,11 @@
 		margin-bottom: 30px;
 		border-radius: 15px;
 		background-color: $accent-color;
+		transition: all 0.3s ease 0s;
+
+		&:hover {
+			background-color: rgba(0, 136, 169, 0.9);
+		}
 	}
 
 	table {
@@ -260,6 +265,17 @@
 	th {
 		padding: 25px 55px;
 		text-align: left;
+	}
+
+	th {
+		cursor: pointer;
+		transition: all 0.3s ease 0s;
+		&:last-child {
+			cursor: default;
+		}
+		&:hover {
+			color: $background-color;
+		}
 	}
 	thead {
 		box-shadow: 0 3px 6px #00000030;
