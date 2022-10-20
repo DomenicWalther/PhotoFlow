@@ -207,10 +207,6 @@
 		background-color: $accent-color;
 	}
 
-	body {
-		background-color: #202e39;
-	}
-
 	table {
 		font-size: 24px;
 		background-color: $background-color;

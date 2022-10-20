@@ -21,8 +21,7 @@
 <style lang="scss">
 	@import url('https://fonts.googleapis.com/css?family=Montserrat:500');
 	li,
-	a,
-	button {
+	a {
 		font-family: 'Montserrat', sans-serif;
 		font-weight: 500;
 		font-size: 16px;
@@ -57,20 +56,6 @@
 			a:hover {
 				color: #0088a9;
 			}
-		}
-	}
-
-	button {
-		padding: 9px 25px;
-		background-color: rgba(0, 136, 169, 1);
-		color: #edf0f1;
-		border: none;
-		border-radius: 50px;
-		cursor: pointer;
-		transition: all 0.3s ease 0s;
-
-		&:hover {
-			background-color: rgba(0, 136, 169, 0.8);
 		}
 	}
 </style>
