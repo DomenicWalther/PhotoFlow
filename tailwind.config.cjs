@@ -11,5 +11,12 @@ const config = {
 module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}', './node_modules/stwui/**/*.{svelte,js,ts,html}'],
 	plugins: [require('@tailwindcss/forms'), require('stwui/plugin')],
-	darkMode: 'class'
+	darkMode: 'class',
+	theme: {
+		extend: {
+			colors: {
+				maindark: '#141723'
+			}
+		}
+	}
 };

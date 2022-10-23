@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { tasks } from '$lib/store.js';
+	import { tasks, tasksSearchTerm, tasksFiltered } from '$lib/store.js';
 	import moment from 'moment';
 
 	import NewTask from '$lib/NewTask.svelte';
@@ -12,6 +12,9 @@
 	let UpdateTaskValues = [];
 	let sortSelected = 'duedate';
 	let sortOnce = true;
+	let searchQuery = '';
+
+	$: tasksSearchTerm.set(searchQuery);
 
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -131,6 +134,7 @@
 <NavBar />
 <div class="TaskManagement">
 	<button on:click={toggleNewTask} type="button" class="neuer-auftrag">Neuer Auftrag</button>
+	<input type="text" placeholder="Filter.." bind:value={searchQuery} />
 
 	{#if openModal}
 		<NewTask on:toggle={toggleNewTask} on:fetchTasks={getAndCreateTasks} />
@@ -174,7 +178,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each $tasks as task}
+				{#each $tasksFiltered as task}
 					<tr>
 						<td>{task.name}</td>
 						<td>{task.duedate.toLocaleDateString('de-DE', dateOptions)}</td>
