@@ -2,6 +2,7 @@
 	// Importing Libraries
 	import { createForm } from 'svelte-forms-lib';
 	import * as yup from 'yup';
+	import { goto } from '$app/navigation';
 
 	// Importing Components
 	import NavBar from '$lib/NavBar.svelte';
@@ -17,7 +18,7 @@
 		validationSchema: yup.object().shape({
 			first_name: yup.string().required('First Name is required'),
 			last_name: yup.string().required('Last Name is required'),
-			email: yup.string().email().required('Email is required'),
+			email: yup.string().email("Please enter a valid E-Mail Adress.").required('Email is required'),
 			password: yup.string().required('Password is required'),
 			confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match')
 		}),
@@ -34,6 +35,7 @@
 			}).then((response) => {
 				response.json();
 				handleReset();
+				goto('/taskOverview');
 			});
 		}
 	});
