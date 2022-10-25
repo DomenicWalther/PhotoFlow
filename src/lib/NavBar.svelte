@@ -1,7 +1,16 @@
 <script>
 	import { Avatar } from 'stwui';
+	import { signedIn } from './store.js';
 
 	let src = './logo.svg';
+
+	const signIn = () => {
+		$signedIn = true;
+	}
+
+	const signOut = () => {
+		$signedIn = false;
+	}
 </script>
 
 <header>
@@ -13,9 +22,15 @@
 			<li><a href="#">About</a></li>
 		</ul>
 	</nav>
-	<Avatar initials="DW">
+	{#if $signedIn}
+	<Avatar initials="DW" on:click={signOut}>
 		<Avatar.Indicator slot="indicator" placement="bottom-right" />
 	</Avatar>
+	{:else}
+		 <button on:click={signIn}>Sign In</button>
+	{/if}
+	
+	
 </header>
 
 <style lang="scss">

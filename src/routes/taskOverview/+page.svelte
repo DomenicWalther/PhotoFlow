@@ -233,9 +233,7 @@
 		border: none;
 		cursor: pointer;
 	}
-	* {
-		font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-	}
+
 	.TaskManagement {
 		padding-top: 100px;
 		display: flex;

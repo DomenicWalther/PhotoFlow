@@ -31,6 +31,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"moment": "^2.29.4"
+		"moment": "^2.29.4",
+		"svelte-forms-lib": "^2.0.1",
+		"yup": "^0.32.11"
 	}
 }
