@@ -4,7 +4,6 @@
 	import moment from 'moment';
 
 	import NewTask from '$lib/NewTask.svelte';
-	import NavBar from '$lib/NavBar.svelte';
 	import UpdateTask from '$lib/UpdateTask.svelte';
 
 	let openModal = false;
@@ -131,7 +130,6 @@
 	}
 </script>
 
-<NavBar />
 <div class="TaskManagement">
 	<button on:click={toggleNewTask} type="button" class="neuer-auftrag">Neuer Auftrag</button>
 	<input type="text" placeholder="Filter.." bind:value={searchQuery} />

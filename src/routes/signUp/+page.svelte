@@ -4,9 +4,6 @@
 	import * as yup from 'yup';
 	import { goto } from '$app/navigation';
 
-	// Importing Components
-	import NavBar from '$lib/NavBar.svelte';
-
 	const { form, errors, state, handleChange, handleSubmit, handleReset } = createForm({
 		initialValues: {
 			first_name: '',
@@ -42,7 +39,6 @@
 
 </script>
 
-<NavBar />
 <div class="flex h-screen justify-center mt-8">
 	<form class="w-full max-w-lg" on:submit|preventDefault={handleSubmit}>
 		<div class="flex flex-wrap -mx-3 mb-2">
