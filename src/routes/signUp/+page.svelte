@@ -38,15 +38,6 @@
 		}
 	});
 
-	// const handleSignUp = () => {
-	// 	if (password !== confirmPassword) {
-	// 		return 'Password is not matching!';
-	// 	} else {
-	// 		console.log('Name: ', first_name, last_name);
-	// 		console.log('E-Mail: ', email);
-	// 		console.log('Password: ', password);
-	// 	}
-	// };
 </script>
 
 <NavBar />
