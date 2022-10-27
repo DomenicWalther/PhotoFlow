@@ -32,7 +32,7 @@
 			}).then((response) => {
 				response.json();
 				handleReset();
-				goto('/taskOverview');
+				goto('/signIn');
 			});
 		}
 	});

@@ -26,7 +26,8 @@
 				status: status,
 				familyname: familyName,
 				duedate: moment(value).format('YYYY-MM-DD'),
-				others: extras
+				others: extras,
+				user_id: 2
 			})
 		}).then((response) => {
 			getCurrentTasks();
