@@ -1,15 +1,25 @@
 <script>
-	import { Avatar } from 'stwui';
+	import { Avatar, Dropdown, Button, Badge } from 'stwui';
 	import { signedIn } from './store.js';
+
+	let visible = false;
 
 	let src = './logo.svg';
 
 	const signIn = () => {
 		$signedIn = true;
-	}
+	};
 
 	const signOut = () => {
 		$signedIn = false;
+	};
+
+	function closeDropdown() {
+		visible = false;
+	}
+
+	function toggleDropdown() {
+		visible = !visible;
 	}
 </script>
 
@@ -23,14 +33,43 @@
 		</ul>
 	</nav>
 	{#if $signedIn}
-	<Avatar initials="DW" on:click={signOut}>
-		<Avatar.Indicator slot="indicator" placement="bottom-right" />
-	</Avatar>
+		<!-- <Dropdown bind:visible={visible}>
+			<Avatar initials="DW" on:click={signOut} on:click={toggleDropdown}>
+				<Avatar.Indicator slot="indicator" placement="bottom-right" />
+			</Avatar>
+			<Dropdown.Items slot="items">
+				<Dropdown.Items.Item on:click={closeDropdown} label="Item 1">
+					<Dropdown.Items.Item.Icon slot="icon"/>
+				</Dropdown.Items.Item>
+				<Dropdown.Items.Item on:click={closeDropdown} label="Item 2">
+					<Dropdown.Items.Item.Icon slot="extra"/>
+				</Dropdown.Items.Item>
+				<Dropdown.Items.Item on:click={closeDropdown} label="Notifications">
+					<Badge type="info" slot="extra">+99</Badge>
+				</Dropdown.Items.Item>
+				<Dropdown.Items.Divider />
+			</Dropdown.Items>
+		</Dropdown> -->
+		<Dropdown bind:visible={visible}>
+			<Button slot="trigger" on:click={toggleDropdown}>
+				<Avatar initials="DW" on:click={signOut} on:click={toggleDropdown}>
+					<Avatar.Indicator slot="indicator" placement="bottom-right" />
+				</Avatar></Button>
+			<Dropdown.Items slot="items">
+				<Dropdown.Items.Item on:click={closeDropdown} label="Item 1">
+					Dashboard
+				</Dropdown.Items.Item>
+				<Dropdown.Items.Item on:click={closeDropdown} label="Item 2">
+					Profile Settings
+				</Dropdown.Items.Item>
+				<Dropdown.Items.Item on:click={closeDropdown} label="Notifications">
+					Sign Out
+				</Dropdown.Items.Item>
+			</Dropdown.Items>
+		</Dropdown>
 	{:else}
-		 <button on:click={signIn}>Sign In</button>
+		<button on:click={signIn}>Sign In</button>
 	{/if}
-	
-	
 </header>
 
 <style lang="scss">
