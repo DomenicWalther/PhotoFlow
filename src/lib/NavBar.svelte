@@ -2,16 +2,15 @@
 	import { Avatar, Dropdown, Button, Badge } from 'stwui';
 	import { signedIn } from './store.js';
 
+
+	import { signOut, getUser } from "@lucia-auth/sveltekit/client"
+	import { invalidateAll } from '$app/navigation';
 	let visible = false;
 
 	let src = './logo.svg';
 
 	const signIn = () => {
 		$signedIn = true;
-	};
-
-	const signOut = () => {
-		$signedIn = false;
 	};
 
 	function closeDropdown() {
@@ -21,6 +20,9 @@
 	function toggleDropdown() {
 		visible = !visible;
 	}
+
+	const user = getUser();
+
 </script>
 
 <header>
@@ -32,24 +34,7 @@
 			<li><a href="#">About</a></li>
 		</ul>
 	</nav>
-	{#if $signedIn}
-		<!-- <Dropdown bind:visible={visible}>
-			<Avatar initials="DW" on:click={signOut} on:click={toggleDropdown}>
-				<Avatar.Indicator slot="indicator" placement="bottom-right" />
-			</Avatar>
-			<Dropdown.Items slot="items">
-				<Dropdown.Items.Item on:click={closeDropdown} label="Item 1">
-					<Dropdown.Items.Item.Icon slot="icon"/>
-				</Dropdown.Items.Item>
-				<Dropdown.Items.Item on:click={closeDropdown} label="Item 2">
-					<Dropdown.Items.Item.Icon slot="extra"/>
-				</Dropdown.Items.Item>
-				<Dropdown.Items.Item on:click={closeDropdown} label="Notifications">
-					<Badge type="info" slot="extra">+99</Badge>
-				</Dropdown.Items.Item>
-				<Dropdown.Items.Divider />
-			</Dropdown.Items>
-		</Dropdown> -->
+	{#if $user?.userId !== undefined}
 		<Dropdown bind:visible={visible}>
 			<Button slot="trigger" on:click={toggleDropdown}>
 				<Avatar initials="DW" on:click={signOut} on:click={toggleDropdown}>
@@ -62,7 +47,10 @@
 				<Dropdown.Items.Item on:click={closeDropdown} label="Item 2">
 					Profile Settings
 				</Dropdown.Items.Item>
-				<Dropdown.Items.Item on:click={closeDropdown} label="Notifications">
+				<Dropdown.Items.Item on:click={async () => {
+					await signOut();
+					invalidateAll();
+				}} on:click={closeDropdown} label="Notifications">
 					Sign Out
 				</Dropdown.Items.Item>
 			</Dropdown.Items>

@@ -1,7 +1,11 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 
 const config = {
-	plugins: [sveltekit()]
+	plugins: [sveltekit()],
+
+	ssr: {
+		noExternal: ["@lucia-auth/sveltekit"]
+	}
 };
 
 export default config;

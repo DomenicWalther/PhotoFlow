@@ -16,7 +16,7 @@
 	$: tasksSearchTerm.set(searchQuery);
 
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
+	
 	const sort_by = (field, reverse, primer) => {
 		const key = primer
 			? function (x) {
