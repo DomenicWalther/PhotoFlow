@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client"
 import { json } from "@sveltejs/kit"
 import type { RequestHandler } from "./$types";
 import { auth } from "$lib/server/lucia"
