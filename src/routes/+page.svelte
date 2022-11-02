@@ -4,7 +4,7 @@
     const user = getUser();
 </script>
 
-<p>{$user?.username}</p>
+<p>{$user?.email}</p>
 <p>{$user?.userId}</p>
 
 

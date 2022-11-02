@@ -1,23 +1,26 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import { tasks, tasksSearchTerm, tasksFiltered } from '$lib/store.js';
 	import moment from 'moment';
+	import { getUser } from '@lucia-auth/sveltekit/client';
 
 	import NewTask from '$lib/NewTask.svelte';
 	import UpdateTask from '$lib/UpdateTask.svelte';
 
 	let openModal = false;
 	let isUpdateTaskOpen = false;
-	let UpdateTaskValues = [];
-	let sortSelected = 'duedate';
+	let UpdateTaskValues: Array = [];
+	let sortSelected = 'dueAt';
 	let sortOnce = true;
 	let searchQuery = '';
+
+	const user = getUser();
 
 	$: tasksSearchTerm.set(searchQuery);
 
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 	
-	const sort_by = (field, reverse, primer) => {
+	const sort_by = (field, reverse: Boolean | Number, primer) => {
 		const key = primer
 			? function (x) {
 					return primer(x[field]);
@@ -41,9 +44,9 @@
 		openModal = !openModal;
 	}
 
-	function openUpdateTask(id, name, duedate, specialassignments, status) {
+	function openUpdateTask(id, name, dueAt, additional_information, status) {
 		isUpdateTaskOpen = true;
-		UpdateTaskValues = [id, name, duedate, specialassignments, status];
+		UpdateTaskValues = [id, name, dueAt, additional_information, status];
 	}
 
 	function closeUpdateTask() {
@@ -51,9 +54,12 @@
 	}
 
 	async function getCurrentTasks() {
-		const response = await fetch('http://localhost:3000/databaseresults', {
-			method: 'get',
-			headers: { 'Content-Type': 'application/json' }
+		const response = await fetch('/api/getUserTasks', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				user_id: $user?.userId,
+			})
 		});
 
 		const result = await response.json();
@@ -64,9 +70,9 @@
 		if (data !== 'Not found') {
 			$tasks = data.map((i) => {
 				return {
-					name: i.familyname,
-					duedate: new Date(i.duedate.replace(' ', 'T')),
-					specialassignments: i.others,
+					name: i.task,
+					dueAt: new Date(i.dueAt.replace(' ', 'T')),
+					additional_information: i.additional_information,
 					status: i.status,
 					id: i.id
 				};
@@ -74,10 +80,10 @@
 		} else {
 			$tasks = [];
 		}
-		$tasks = $tasks.sort(sort_by('duedate', false));
+		$tasks = $tasks.sort(sort_by('dueAt', false));
 	}
 
-	function sortTasks(field, reverse, primer) {
+	function sortTasks(field, reverse: Boolean, primer) {
 		if (sortSelected === field) {
 			if (sortOnce) {
 				reverse = !reverse;
@@ -94,11 +100,11 @@
 	}
 
 	async function deleteTask(deleteID) {
-		fetch('http://localhost:3000/deletetask', {
-			method: 'post',
+		fetch('/api/deleteUserTask', {
+			method: 'DELETE',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				id: deleteID
+				task_id: deleteID
 			})
 		}).then((response) => {
 			getAndCreateTasks();
@@ -106,16 +112,16 @@
 		});
 	}
 
-	async function updateTask(updateID, updateStatus, updateName, updateDueDate, updateExtras) {
-		fetch('http://localhost:3000/updatetask', {
-			method: 'put',
+	async function updateTask(updateID, updateStatus, updateName, updateDueAt, updateExtras) {
+		fetch('/api/updateUserTask', {
+			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				id: updateID,
 				status: updateStatus,
-				familyname: updateName,
-				duedate: moment(updateDueDate).format('YYYY-MM-DD'),
-				others: updateExtras
+				task: updateName,
+				dueAt: moment(updateDueAt).format('YYYY-MM-DD'),
+				additional_information: updateExtras
 			})
 		}).then((response) => {
 			response.json;
@@ -124,9 +130,9 @@
 	}
 
 	function updateTaskFromModal(event) {
-		let id, name, duedate, extra, status;
-		[id, name, duedate, extra, status] = event.detail.values;
-		updateTask(id, status, name, duedate, extra);
+		let id, name, dueAt, extra, status;
+		[id, name, dueAt, extra, status] = event.detail.values;
+		updateTask(id, status, name, dueAt, extra);
 	}
 </script>
 
@@ -154,10 +160,10 @@
 							class:caret-up={sortSelected === 'name' && !sortOnce}
 						/></th
 					>
-					<th on:click={() => sortTasks('duedate', false)}
+					<th on:click={() => sortTasks('dueAt', false)}
 						>Datum<i
-							class:caret-down={sortSelected === 'duedate' && sortOnce}
-							class:caret-up={sortSelected === 'duedate' && !sortOnce}
+							class:caret-down={sortSelected === 'dueAt' && sortOnce}
+							class:caret-up={sortSelected === 'dueAt' && !sortOnce}
 						/></th
 					>
 					<th on:click={() => sortTasks('status', false, (a) => a.toUpperCase())}
@@ -166,10 +172,10 @@
 							class:caret-up={sortSelected === 'status' && !sortOnce}
 						/></th
 					>
-					<th on:click={() => sortTasks('specialassignments', false, (a) => a.toUpperCase())}
+					<th on:click={() => sortTasks('additional_information', false, (a) => a.toUpperCase())}
 						>Zusätzliches<i
-							class:caret-down={sortSelected === 'specialassignments' && sortOnce}
-							class:caret-up={sortSelected === 'specialassignments' && !sortOnce}
+							class:caret-down={sortSelected === 'additional_information' && sortOnce}
+							class:caret-up={sortSelected === 'additional_information' && !sortOnce}
 						/></th
 					>
 					<th>Optionen</th>
@@ -179,7 +185,7 @@
 				{#each $tasksFiltered as task}
 					<tr>
 						<td>{task.name}</td>
-						<td>{task.duedate.toLocaleDateString('de-DE', dateOptions)}</td>
+						<td>{task.dueAt.toLocaleDateString('de-DE', dateOptions)}</td>
 						<td
 							><select
 								name="status"
@@ -190,8 +196,8 @@
 										task.id,
 										task.status,
 										task.name,
-										task.duedate,
-										task.specialassignments
+										task.dueAt,
+										task.additional_information
 									)}
 							>
 								<option value="NichtBearbeitet">Nicht Bearbeitet</option>
@@ -200,15 +206,15 @@
 								<option value="Gedruckt">Gedruckt</option>
 							</select></td
 						>
-						<td>{task.specialassignments === null ? '' : task.specialassignments}</td>
+						<td>{task.additional_information === null ? '' : task.additional_information}</td>
 						<td
 							><button on:click={() => deleteTask(task.id)}>Delete</button><br /><button
 								on:click={() =>
 									openUpdateTask(
 										task.id,
 										task.name,
-										task.duedate,
-										task.specialassignments,
+										task.dueAt,
+										task.additional_information,
 										task.status
 									)}>Edit</button
 							></td

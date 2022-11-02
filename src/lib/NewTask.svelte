@@ -1,15 +1,16 @@
-<script>
+<script lang="ts">
 	import { CalendarView } from 'fluent-svelte';
 	import { Card, Modal } from 'stwui';
 	import { createEventDispatcher } from 'svelte';
+	import { getUser } from "@lucia-auth/sveltekit/client";
 	import moment from 'moment';
 
 	let value = new Date();
-	let familyName, extras, status;
+	let task: String, extras: String, status: String;
 	extras = '';
 
 	const dispatch = createEventDispatcher();
-
+	const user = getUser();
 	function toggleModal() {
 		dispatch('toggle');
 	}
@@ -19,15 +20,15 @@
 	}
 
 	const submitForm = async (event) => {
-		fetch('http://localhost:3000/addnewtask', {
-			method: 'post',
+		fetch('/api/createNewTask', {
+			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
+				user_id: $user?.userId,
+				dueAt: moment(value).format('YYYY-MM-DD'),
+				task: task,
+				additional_information: extras,
 				status: status,
-				familyname: familyName,
-				duedate: moment(value).format('YYYY-MM-DD'),
-				others: extras,
-				user_id: 2
 			})
 		}).then((response) => {
 			getCurrentTasks();
@@ -35,7 +36,7 @@
 		});
 		toggleModal();
 		event.target.reset();
-		familyName = '';
+		task = '';
 		extras = '';
 		value = new Date();
 	};
@@ -51,7 +52,7 @@
 				</div>
 				<form on:submit|preventDefault={submitForm}>
 					Familie
-					<input type="text" bind:value={familyName} class="inputField" />
+					<input type="text" bind:value={task} class="inputField" />
 					Extra
 					<input type="text" bind:value={extras} class="inputField" />
 					<select name="status" id="status" bind:value={status}>
