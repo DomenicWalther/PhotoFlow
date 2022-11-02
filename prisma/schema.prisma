@@ -22,8 +22,8 @@ model user {
 }
 
 model tasks {
-  id Int @id @default(autoincrement())
-  user_id String @unique
+  id String @id @default(cuid())
+  user_id String 
   user user @relation(references: [id], fields: [user_id], onDelete: Cascade)
   dueAt DateTime @default(now())
   createdAt DateTime @default(now())
