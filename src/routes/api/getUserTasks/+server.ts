@@ -4,16 +4,6 @@ import type { RequestHandler } from "./$types";
 import { auth } from "$lib/server/lucia"
 import prisma from "$lib/server/prisma"
 
-function exclude<Tasks, Key extends keyof Tasks>(
-    task: Tasks,
-    ...keys: Key[]
-): Omit<Tasks, Key> {
-    for (let key of keys) {
-        delete task[key]
-    }
-    return task
-}
-
 export const POST: RequestHandler = async ({ request }) => {
     const { user_id } = await request.json();
 
