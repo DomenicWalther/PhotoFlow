@@ -15,8 +15,7 @@ export const actions: Actions = {
             const user = await auth.createUser("email", email, {
                 password,
                 attributes: {
-                    email,
-                    email_verified: false
+                    email
                 }
             });
             const session = await auth.createSession(user.userId);
