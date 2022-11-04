@@ -11,7 +11,7 @@ export const actions: Actions = {
             return invalid(400);
         }
         try {
-            const user = await auth.authenticateUser("username", username, password);
+            const user = await auth.authenticateUser("email", username, password);
             const session = await auth.createSession(user.userId);
             locals.setSession(session);
         } catch {

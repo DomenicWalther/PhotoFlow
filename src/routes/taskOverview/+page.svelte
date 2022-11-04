@@ -9,7 +9,7 @@
 
 	let openModal = false;
 	let isUpdateTaskOpen = false;
-	let UpdateTaskValues: Array = [];
+	let UpdateTaskValues: Array<String | Number | Date> = [];
 	let sortSelected = 'dueAt';
 	let sortOnce = true;
 	let searchQuery = '';
@@ -20,12 +20,12 @@
 
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 	
-	const sort_by = (field, reverse: Boolean | Number, primer) => {
+	const sort_by = (field, reverse: Boolean | Number, primer: Function) => {
 		const key = primer
 			? function (x) {
 					return primer(x[field]);
 			  }
-			: function (x) {
+			: function (x: Object) {
 					return x[field];
 			  };
 
