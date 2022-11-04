@@ -1,5 +1,5 @@
 <script>
-	import { Avatar, Dropdown, Button, Badge } from 'stwui';
+	import { Avatar, Dropdown, Button } from 'stwui';
 
 	import { signOut, getUser } from '@lucia-auth/sveltekit/client';
 	import { invalidateAll } from '$app/navigation';
@@ -30,7 +30,7 @@
 	{#if $user?.userId !== undefined}
 		<Dropdown bind:visible>
 			<Button slot="trigger" on:click={toggleDropdown}>
-				<Avatar initials="DW" on:click={signOut} on:click={toggleDropdown}>
+				<Avatar initials="DW">
 					<Avatar.Indicator slot="indicator" placement="bottom-right" />
 				</Avatar></Button
 			>
@@ -45,8 +45,8 @@
 					on:click={async () => {
 						await signOut();
 						invalidateAll();
+						closeDropdown()
 					}}
-					on:click={closeDropdown}
 					label="Notifications"
 				>
 					Sign Out
@@ -54,7 +54,7 @@
 			</Dropdown.Items>
 		</Dropdown>
 	{:else}
-		<a href="/signIn"><button>Sign In</button></a>
+		<a href="/login"><button>Sign In</button></a>
 	{/if}
 </header>
 
