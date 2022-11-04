@@ -12,7 +12,3 @@ export const tasksFiltered = derived([tasksSearchTerm, tasks], ([$tasksSearchTer
 		)
 	)
 );
-
-
-// -- User SignIn Variables
-export const signedIn = writable(false);

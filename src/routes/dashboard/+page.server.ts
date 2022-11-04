@@ -6,7 +6,8 @@ export const load: PageServerLoad = async ({ cookies, locals }) => {
     console.log(session?.userId)
     const taskCount = await prisma.tasks.count({
         where: {
-            user_id: session?.userId
+            user_id: session?.userId,
+            is_finished: false
         }
     })
 

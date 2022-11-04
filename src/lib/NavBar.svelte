@@ -1,17 +1,11 @@
 <script>
 	import { Avatar, Dropdown, Button, Badge } from 'stwui';
-	import { signedIn } from './store.js';
 
-
-	import { signOut, getUser } from "@lucia-auth/sveltekit/client"
+	import { signOut, getUser } from '@lucia-auth/sveltekit/client';
 	import { invalidateAll } from '$app/navigation';
 	let visible = false;
 
 	let src = './logo.svg';
-
-	const signIn = () => {
-		$signedIn = true;
-	};
 
 	function closeDropdown() {
 		visible = false;
@@ -22,7 +16,6 @@
 	}
 
 	const user = getUser();
-
 </script>
 
 <header>
@@ -35,40 +28,47 @@
 		</ul>
 	</nav>
 	{#if $user?.userId !== undefined}
-		<Dropdown bind:visible={visible}>
+		<Dropdown bind:visible>
 			<Button slot="trigger" on:click={toggleDropdown}>
 				<Avatar initials="DW" on:click={signOut} on:click={toggleDropdown}>
 					<Avatar.Indicator slot="indicator" placement="bottom-right" />
-				</Avatar></Button>
+				</Avatar></Button
+			>
 			<Dropdown.Items slot="items">
 				<Dropdown.Items.Item on:click={closeDropdown} label="Item 1">
-					Dashboard
+					<a href="/dashboard">Dashboard</a>
 				</Dropdown.Items.Item>
 				<Dropdown.Items.Item on:click={closeDropdown} label="Item 2">
 					Profile Settings
 				</Dropdown.Items.Item>
-				<Dropdown.Items.Item on:click={async () => {
-					await signOut();
-					invalidateAll();
-				}} on:click={closeDropdown} label="Notifications">
+				<Dropdown.Items.Item
+					on:click={async () => {
+						await signOut();
+						invalidateAll();
+					}}
+					on:click={closeDropdown}
+					label="Notifications"
+				>
 					Sign Out
 				</Dropdown.Items.Item>
 			</Dropdown.Items>
 		</Dropdown>
 	{:else}
-		<button on:click={signIn}>Sign In</button>
+		<a href="/signIn"><button>Sign In</button></a>
 	{/if}
 </header>
 
 <style lang="scss">
 	@import url('https://fonts.googleapis.com/css?family=Montserrat:500');
-	li,
-	a {
-		font-family: 'Montserrat', sans-serif;
-		font-weight: 500;
-		font-size: 16px;
-		color: #202e39;
-		text-decoration: none;
+	.nav__links {
+		li,
+		a {
+			font-family: 'Montserrat', sans-serif;
+			font-weight: 500;
+			font-size: 16px;
+			color: #202e39;
+			text-decoration: none;
+		}
 	}
 
 	header {

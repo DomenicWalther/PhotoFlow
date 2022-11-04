@@ -10,7 +10,8 @@ export const POST: RequestHandler = async ({ request }) => {
         const session = auth.validateRequest(request)
         const tasks = await prisma.tasks.findMany({
             where: {
-                user_id: user_id
+                user_id: user_id,
+                is_finished: false
             },
             select: {
                 dueAt: true,
