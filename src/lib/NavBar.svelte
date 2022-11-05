@@ -5,7 +5,7 @@
 	import { invalidateAll } from '$app/navigation';
 	let visible = false;
 
-	let src = './logo.svg';
+	let logoSource = '/logo.svg';
 
 	function closeDropdown() {
 		visible = false;
@@ -19,7 +19,7 @@
 </script>
 
 <header>
-	<a href="/"> <img {src} alt="logo" class="logo" /></a>
+	<a href="/"> <img src="{logoSource}" alt="logo" class="logo" /></a>
 	<nav>
 		<ul class="nav__links">
 			<li><a href="/taskOverview">Tasks</a></li>
