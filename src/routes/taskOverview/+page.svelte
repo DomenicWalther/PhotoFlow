@@ -112,6 +112,19 @@
 		});
 	}
 
+	async function finishTask(finishID) {
+		fetch('/api/finishUserTask', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json'},
+			body: JSON.stringify({
+				id: finishID
+			})
+		}).then((response) => {
+				getAndCreateTasks();
+				response.json()
+			}) 
+	}
+
 	async function updateTask(updateID, updateStatus, updateName, updateDueAt, updateExtras) {
 		fetch('/api/updateUserTask', {
 			method: 'POST',
@@ -217,7 +230,8 @@
 										task.additional_information,
 										task.status
 									)}>Edit</button
-							></td
+							>
+							<button on:click={() => finishTask(task.id)}>Finish</button></td
 						>
 					</tr>
 				{/each}
