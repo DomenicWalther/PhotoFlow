@@ -2,19 +2,28 @@ import type { PageServerLoad } from './$types';
 import prisma from "$lib/server/prisma"
 
 export const load: PageServerLoad = async ({ cookies, locals }) => {
+    const date30DaysBack = new Date(new Date().setDate(new Date().getDate() - 30)).toISOString();
     const session= await locals.getSession();
     console.log(session?.userId)
-    const taskCount = await prisma.tasks.count({
+    const clientCount = await prisma.tasks.count({
         where: {
             user_id: session?.userId,
             is_finished: false
         }
     })
 
-    console.log(taskCount)
+    const pastClientCount = await prisma.tasks.count({
+        where: {
+            user_id: session?.userId, 
+            createdAt: {
+                gte: date30DaysBack
+            }
+        }
+    })
 
     return {
-        taskCount: taskCount
+        clientCount,
+        pastClientCount
     }
 }
 

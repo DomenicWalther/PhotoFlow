@@ -4,7 +4,7 @@
     export let data: PageData
 </script>
 
-<p>Client Count: {data.taskCount}</p>
-<p>Client's in the past 30 days: </p>
+<p>Client Count: {data.clientCount}</p>
+<p>Client's in the past 30 days: {data.pastClientCount} </p>
 
 
