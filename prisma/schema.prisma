@@ -27,10 +27,20 @@ model tasks {
   user user @relation(references: [id], fields: [user_id], onDelete: Cascade)
   dueAt DateTime @default(now())
   createdAt DateTime @default(now())
+  finishedAt DateTime @default(now())
   task String
   additional_information String
   status String
   is_finished Boolean @default(false)
+  task_comments task_comments[]
+}
+
+model task_comments {
+  id String @id @default(cuid())
+  task_id String
+  tasks tasks @relation(references: [id], fields: [task_id])
+  comment String
+  createdAt DateTime @default(now())
 }
 
 model session {
