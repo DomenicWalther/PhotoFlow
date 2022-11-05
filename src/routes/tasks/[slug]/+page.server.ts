@@ -9,6 +9,13 @@ export const load: PageServerLoad = async ({ params}) => {
             id: params.slug
         }
     })
+
+    const taskCommentsFromTaskID = await prisma.task_comments.findMany({
+        where: {
+            task_id: params.slug
+        }
+    })
     return {
-        tasks: taskFromTaskID }
+        tasks: taskFromTaskID,
+        comments: taskCommentsFromTaskID }
 }
