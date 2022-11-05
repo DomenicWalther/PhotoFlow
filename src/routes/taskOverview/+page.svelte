@@ -197,7 +197,7 @@
 			<tbody>
 				{#each $tasksFiltered as task}
 					<tr>
-						<td>{task.name}</td>
+						<td><a href="/tasks/{task.id}">{task.name}</a></td>
 						<td>{task.dueAt.toLocaleDateString('de-DE', dateOptions)}</td>
 						<td
 							><select
