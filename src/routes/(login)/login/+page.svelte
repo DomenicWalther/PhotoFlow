@@ -11,4 +11,6 @@
 		<input type="password" name="password" id="password"><br>
 		<input type="submit" value="Continue" class="button">
 	</form>
+	<a href="/forgotPassword"><button>Forgot Password</button></a>
+	<a href="/signup"><button>Sign up</button></a>
 </div>
