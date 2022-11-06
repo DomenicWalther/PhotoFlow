@@ -35,9 +35,10 @@
 		"@lucia-auth/sveltekit": "^0.1.4",
 		"@prisma/client": "^4.5.0",
 		"moment": "^2.29.4",
+		"qrcode": "^1.5.1",
+		"stwui": "^0.0.27-next",
 		"svelte-forms-lib": "^2.0.1",
 		"typescript": "^4.8.4",
-		"yup": "^0.32.11",
-		"stwui": "^0.0.27-next"
+		"yup": "^0.32.11"
 	}
 }
