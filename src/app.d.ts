@@ -3,7 +3,7 @@
 // and what to do when importing types
 
 declare namespace Lucia {
-	type Auth = import("$lib/server/lucia").Auth;
+	type Auth = import('$lib/server/lucia').Auth;
 	type UserAttributes = {
 		email: string;
 	};
@@ -11,12 +11,19 @@ declare namespace Lucia {
 
 declare namespace App {
 	interface Locals {
-		getSession: import("@lucia-auth/sveltekit").GetSession;
-		setSession: import("@lucia-auth/sveltekit").SetSession;
-		clearSession: import("@lucia-auth/sveltekit").ClearSession;
+		getSession: import('@lucia-auth/sveltekit').GetSession;
+		setSession: import('@lucia-auth/sveltekit').SetSession;
+		clearSession: import('@lucia-auth/sveltekit').ClearSession;
 	}
 	// interface PageData {}
 	// interface Error {}
 	// interface Platform {}
+}
 
+interface Tasks {
+	name: String;
+	dueAt: String;
+	additional_information: String;
+	status: String;
+	id: String;
 }
