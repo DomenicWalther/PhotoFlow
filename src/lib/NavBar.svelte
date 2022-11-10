@@ -20,7 +20,7 @@
 </script>
 
 <header>
-	<a href="/"> <img src="{logoSource}" alt="logo" class="logo" /></a>
+	<a href="/"> <img src={logoSource} alt="logo" class="logo" /></a>
 	<nav>
 		<ul class="nav__links">
 			<li><a href="/taskOverview">Tasks</a></li>
@@ -36,22 +36,16 @@
 				</Avatar></Button
 			>
 			<Dropdown.Items slot="items">
-				<Dropdown.Items.Item on:click={closeDropdown} label="Item 1">
-					<a href="/dashboard">Dashboard</a>
-				</Dropdown.Items.Item>
-				<Dropdown.Items.Item on:click={closeDropdown} label="Item 2">
-					Profile Settings
-				</Dropdown.Items.Item>
+				<a href="/dashboard"><Dropdown.Items.Item on:click={closeDropdown} label="Dashboard" /></a>
+				<Dropdown.Items.Item on:click={closeDropdown} label="Profile Settings" />
 				<Dropdown.Items.Item
 					on:click={async () => {
 						await signOut();
 						invalidateAll();
-						closeDropdown()
+						closeDropdown();
 					}}
-					label="Notifications"
-				>
-					Sign Out
-				</Dropdown.Items.Item>
+					label="Sign Out"
+				/>
 			</Dropdown.Items>
 		</Dropdown>
 	{:else}
