@@ -3,6 +3,7 @@
 
 	import { signOut, getUser } from '@lucia-auth/sveltekit/client';
 	import { invalidateAll } from '$app/navigation';
+	import QrCode from './QRCode.svelte';
 	let visible = false;
 
 	let logoSource = '/logo.svg';
