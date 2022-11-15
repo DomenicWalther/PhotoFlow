@@ -37,9 +37,13 @@
 				label="Client Name"
 				data={data.tasks?.task.charAt(0).toUpperCase() + data.tasks?.task.slice(1)}
 			/>
-			<TaskRow label="Category" data={data.tasks?.additional_information} />
+			<TaskRow label="Category" data={data.tasks?.additional_information} isDark />
 			<TaskRow label="Status" data={data.tasks?.status} />
-			<TaskRow label="Due At" data={data.tasks?.dueAt.toLocaleDateString('de-DE', dateOptions)} />
+			<TaskRow
+				label="Due At"
+				data={data.tasks?.dueAt.toLocaleDateString('de-DE', dateOptions)}
+				isDark
+			/>
 
 			<div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 				<div class="max-w-lg ">
@@ -53,7 +57,7 @@
 				</div>
 			</div>
 
-			<div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+			<div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 				<dt class="text-m mt-1 text-gray-900">Activity</dt>
 			</div>
 			{#if data.comments}
