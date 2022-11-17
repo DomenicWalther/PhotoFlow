@@ -1,9 +1,6 @@
 <script>
 	import { Avatar, Dropdown, Button } from 'stwui';
-
-	import { signOut, getUser } from '@lucia-auth/sveltekit/client';
-	import { invalidateAll } from '$app/navigation';
-	import QrCode from './QRCode.svelte';
+	import { supabase } from './supabaseClient';
 	let visible = false;
 
 	let logoSource = '/logo.svg';
@@ -15,8 +12,6 @@
 	function toggleDropdown() {
 		visible = !visible;
 	}
-
-	const user = getUser();
 </script>
 
 <header>
@@ -28,29 +23,26 @@
 			<li><a href="#">About</a></li>
 		</ul>
 	</nav>
-	{#if $user?.userId !== undefined}
-		<Dropdown bind:visible>
-			<Button slot="trigger" on:click={toggleDropdown}>
-				<Avatar initials="DW">
-					<Avatar.Indicator slot="indicator" placement="bottom-right" />
-				</Avatar></Button
-			>
-			<Dropdown.Items slot="items">
-				<a href="/dashboard"><Dropdown.Items.Item on:click={closeDropdown} label="Dashboard" /></a>
-				<Dropdown.Items.Item on:click={closeDropdown} label="Profile Settings" />
-				<Dropdown.Items.Item
-					on:click={async () => {
-						await signOut();
-						invalidateAll();
-						closeDropdown();
-					}}
-					label="Sign Out"
-				/>
-			</Dropdown.Items>
-		</Dropdown>
-	{:else}
-		<a href="/login"><button>Sign In</button></a>
-	{/if}
+	<Dropdown bind:visible>
+		<Button slot="trigger" on:click={toggleDropdown}>
+			<Avatar initials="DW">
+				<Avatar.Indicator slot="indicator" placement="bottom-right" />
+			</Avatar></Button
+		>
+		<Dropdown.Items slot="items">
+			<a href="/dashboard"><Dropdown.Items.Item on:click={closeDropdown} label="Dashboard" /></a>
+			<Dropdown.Items.Item on:click={closeDropdown} label="Profile Settings" />
+			<Dropdown.Items.Item
+				on:click={async () => {
+					supabase.auth.signOut();
+					closeDropdown();
+				}}
+				label="Sign Out"
+			/>
+		</Dropdown.Items>
+	</Dropdown>
+
+	<!-- <a href="/login"><button>Sign In</button></a> -->
 </header>
 
 <style lang="scss">

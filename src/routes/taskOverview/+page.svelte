@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { tasks, tasksSearchTerm, tasksFiltered } from '$lib/store.js';
 	import moment from 'moment';
-	import { getUser } from '@lucia-auth/sveltekit/client';
 
 	import NewTask from '$lib/NewTask.svelte';
 	import UpdateTask from '$lib/UpdateTask.svelte';
@@ -14,12 +13,10 @@
 	let sortOnce = true;
 	let searchQuery = '';
 
-	const user = getUser();
-
 	$: tasksSearchTerm.set(searchQuery);
 
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-	
+
 	const sort_by = (field, reverse: Boolean | Number, primer: Function) => {
 		const key = primer
 			? function (x) {
@@ -58,7 +55,7 @@
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				user_id: $user?.userId,
+				user_id: 'fe4f898b-1eb7-40e7-ba91-895a272ff479'
 			})
 		});
 
@@ -115,14 +112,14 @@
 	async function finishTask(finishID) {
 		fetch('/api/finishUserTask', {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				id: finishID
 			})
 		}).then((response) => {
-				getAndCreateTasks();
-				response.json()
-			}) 
+			getAndCreateTasks();
+			response.json();
+		});
 	}
 
 	async function updateTask(updateID, updateStatus, updateName, updateDueAt, updateExtras) {
