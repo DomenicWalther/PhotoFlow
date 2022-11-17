@@ -35,6 +35,8 @@
 		"@lucia-auth/adapter-prisma": "^0.1.1",
 		"@lucia-auth/sveltekit": "^0.1.4",
 		"@prisma/client": "^4.5.0",
+		"@supabase/auth-helpers-sveltekit": "^0.8.6",
+		"@supabase/supabase-js": "^2.1.0",
 		"moment": "^2.29.4",
 		"qrcode": "^1.5.1",
 		"svelte-forms-lib": "^2.0.1",
