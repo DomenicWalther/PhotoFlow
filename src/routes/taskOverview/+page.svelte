@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { tasks, tasksSearchTerm, tasksFiltered } from '$lib/store.js';
 	import moment from 'moment';
+	import { supabase } from '$lib/supabaseClient';
 
 	import NewTask from '$lib/NewTask.svelte';
 	import UpdateTask from '$lib/UpdateTask.svelte';
@@ -12,6 +13,7 @@
 	let sortSelected = 'dueAt';
 	let sortOnce = true;
 	let searchQuery = '';
+	let user_id;
 
 	$: tasksSearchTerm.set(searchQuery);
 
@@ -34,6 +36,9 @@
 	};
 
 	onMount(async () => {
+		user_id = await supabase.auth.getUser().then((result) => {
+			return result.data.user.id;
+		});
 		getAndCreateTasks();
 	});
 
@@ -55,7 +60,7 @@
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				user_id: 'fe4f898b-1eb7-40e7-ba91-895a272ff479'
+				user_id
 			})
 		});
 

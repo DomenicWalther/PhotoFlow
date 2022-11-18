@@ -2,15 +2,21 @@
 	import { CalendarView } from 'fluent-svelte';
 	import { Card, Modal } from 'stwui';
 	import { createEventDispatcher } from 'svelte';
-	import { getUser } from "@lucia-auth/sveltekit/client";
 	import moment from 'moment';
+	import { onMount } from 'svelte';
+
+	import { supabase } from '$lib/supabaseClient';
 
 	let value = new Date();
 	let task: String, extras: String, status: String;
+	let user_id: String;
 	extras = '';
-
+	onMount(async () => {
+		user_id = await supabase.auth.getUser().then((result) => {
+			return result.data.user.id;
+		});
+	});
 	const dispatch = createEventDispatcher();
-	const user = getUser();
 	function toggleModal() {
 		dispatch('toggle');
 	}
@@ -24,11 +30,11 @@
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				user_id: $user?.userId,
+				user_id: user_id,
 				dueAt: moment(value).format('YYYY-MM-DD'),
 				task: task,
 				additional_information: extras,
-				status: status,
+				status: status
 			})
 		}).then((response) => {
 			getCurrentTasks();
