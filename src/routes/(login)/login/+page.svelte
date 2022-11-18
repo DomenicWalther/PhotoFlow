@@ -18,7 +18,7 @@
 </script>
 
 <div class="">
-	<h1>Log into Accont</h1>
+	<h1>Log into Account</h1>
 	<form>
 		<label for="email">E-mail</label><br />
 		<input type="text" name="email" id="email" bind:value={email} /><br />
