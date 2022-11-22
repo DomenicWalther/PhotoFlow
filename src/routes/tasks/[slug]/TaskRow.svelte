@@ -2,7 +2,6 @@
 	export let label: String = '';
 	export let data;
 	export let isDark: boolean = false;
-	console.log(data);
 </script>
 
 <div
