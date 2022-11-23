@@ -8,7 +8,6 @@
 			email,
 			password
 		});
-		console.log(data, error);
 	};
 </script>
 
