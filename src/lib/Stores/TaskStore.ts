@@ -1,7 +1,7 @@
 import { writable, derived } from 'svelte/store';
 
 // -- Current Task Variables
-export const tasks: Tasks | [] = writable([]);
+export const tasks: Tasks | [Tasks] = writable([]);
 export const tasksSearchTerm = writable('');
 export const tasksFiltered = derived([tasksSearchTerm, tasks], ([$tasksSearchTerm, $tasks]) =>
 	$tasks.filter((o) =>

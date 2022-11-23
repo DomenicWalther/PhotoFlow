@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { tasks, tasksSearchTerm, tasksFiltered } from '$lib/store.js';
+	import { tasks, tasksSearchTerm, tasksFiltered } from '$lib/Stores/TaskStore';
 	import moment from 'moment';
 	import { supabase } from '$lib/supabaseClient';
 
@@ -13,7 +13,7 @@
 	let sortSelected = 'dueAt';
 	let sortOnce = true;
 	let searchQuery = '';
-	let user_id;
+	let user_id: String;
 
 	$: tasksSearchTerm.set(searchQuery);
 
