@@ -6,6 +6,7 @@
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
 	export let data: PageData;
+	console.log(data.comments);
 
 	let comment: String;
 
@@ -41,7 +42,7 @@
 			<TaskRow label="Status" data={data.tasks?.status} />
 			<TaskRow
 				label="Due At"
-				data={data.tasks?.dueAt.toLocaleDateString('de-DE', dateOptions)}
+				data={new Date(data.tasks?.dueAt).toLocaleDateString('de-DE', dateOptions)}
 				isDark
 			/>
 
@@ -64,8 +65,8 @@
 				{#each data.comments as comment}
 					<div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 						<dt class="text-sm font-medium text-gray-500">
-							{comment.createdAt.toLocaleDateString('de-DE', dateOptions)}
-							{comment.createdAt.toLocaleTimeString('de-DE', {
+							{new Date(comment.created_at).toLocaleDateString('de-DE', dateOptions)}
+							{new Date(comment.created_at).toLocaleTimeString('de-DE', {
 								hour: '2-digit',
 								minute: '2-digit'
 							})}

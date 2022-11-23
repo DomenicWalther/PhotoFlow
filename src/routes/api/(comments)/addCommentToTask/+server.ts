@@ -1,17 +1,17 @@
 import { json } from '@sveltejs/kit';
-import prisma from '$lib/server/prisma';
 import type { RequestHandler } from './$types';
-import { auth } from '$lib/server/lucia';
+import { supabase } from '$lib/supabaseClient';
+
 export const POST: RequestHandler = async ({ request }) => {
 	try {
-		const session = auth.validateRequest(request);
+		const session = await supabase.auth.getSession();
+		if (!session) return;
 		const { task_id, comment } = await request.json();
-		await prisma.task_comments.create({
-			data: {
-				task_id: task_id,
-				comment: comment,
-				createdAt: new Date()
-			}
+
+		const { error } = await supabase.from('task_comments').insert({
+			task_id,
+			comment,
+			created_at: new Date()
 		});
 		return json('Successful!');
 	} catch {

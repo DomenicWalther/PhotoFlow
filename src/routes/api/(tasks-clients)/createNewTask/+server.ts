@@ -9,7 +9,15 @@ export const POST: RequestHandler = async ({ request }) => {
 		const { user_id, dueAt, task, additional_information, status } = await request.json();
 		const { error } = await supabase
 			.from('tasks')
-			.insert({ user_id, dueAt: new Date(dueAt), task, additional_information, status });
+			.insert({
+				user_id,
+				created_at: new Date(),
+				dueAt: new Date(dueAt),
+				task,
+				additional_information,
+				status
+			});
+		console.log(error);
 		return json('Successful!');
 	} catch {
 		return json('Invalid!');
