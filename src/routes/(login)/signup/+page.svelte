@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { supabase } from '$lib/supabaseClient';
-
+	import { goto } from '$app/navigation';
 	let email: string, password: string;
 
 	const handleSignup = async () => {
@@ -8,6 +8,7 @@
 			email,
 			password
 		});
+		goto('/login');
 	};
 </script>
 
