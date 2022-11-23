@@ -3,6 +3,7 @@
 	import { tasks, tasksSearchTerm, tasksFiltered } from '$lib/Stores/TaskStore';
 	import moment from 'moment';
 	import { supabase } from '$lib/supabaseClient';
+	import { sort_by } from '$lib/utils/generalHelpers';
 
 	import NewTask from '$lib/NewTask.svelte';
 	import UpdateTask from '$lib/UpdateTask.svelte';
@@ -18,22 +19,6 @@
 	$: tasksSearchTerm.set(searchQuery);
 
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
-	const sort_by = (field, reverse: Boolean | Number, primer: Function) => {
-		const key = primer
-			? function (x) {
-					return primer(x[field]);
-			  }
-			: function (x: Object) {
-					return x[field];
-			  };
-
-		reverse = !reverse ? 1 : -1;
-
-		return function (a, b) {
-			return (a = key(a)), (b = key(b)), reverse * ((a > b) - (b > a));
-		};
-	};
 
 	onMount(async () => {
 		user_id = await supabase.auth.getUser().then((result) => {
