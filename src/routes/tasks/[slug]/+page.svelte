@@ -6,11 +6,9 @@
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
 	export let data: PageData;
-	console.log(data.comments);
-
 	let comment: String;
 
-	const submitComment = async (event) => {
+	const submitComment = async () => {
 		fetch('/api/addCommentToTask', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -20,6 +18,18 @@
 			})
 		}).then((response) => {
 			comment = '';
+			invalidateAll();
+		});
+	};
+
+	const deleteComment = (comment_id: String) => {
+		fetch('/api/deleteCommentFromTask', {
+			method: 'DELETE',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				comment_id: comment_id
+			})
+		}).then((response) => {
 			invalidateAll();
 		});
 	};
@@ -63,7 +73,7 @@
 			</div>
 			{#if data.comments}
 				{#each data.comments as comment}
-					<div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+					<div class="sm:gapx-4 bg-gray-50 py-3 px-4 sm:grid sm:grid-cols-3 sm:px-6">
 						<dt class="text-sm font-medium text-gray-500">
 							{new Date(comment.created_at).toLocaleDateString('de-DE', dateOptions)}
 							{new Date(comment.created_at).toLocaleTimeString('de-DE', {
@@ -74,9 +84,25 @@
 						<dd class="mt-1 px-20 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
 							{comment.comment}
 						</dd>
+						<div class="flex">
+							<p class="optiontext cursor-pointer underline">Edit</p>
+							<p class="optiontext px-1">-</p>
+							<p
+								on:click={() => deleteComment(comment.id)}
+								class="optiontext cursor-pointer underline"
+							>
+								Delete
+							</p>
+						</div>
 					</div>
 				{/each}
 			{/if}
 		</dl>
 	</div>
 </div>
+
+<style lang="postcss">
+	.optiontext {
+		@apply text-xs font-medium text-gray-800;
+	}
+</style>
