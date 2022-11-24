@@ -2,11 +2,15 @@
 	import TaskRow from './TaskRow.svelte';
 	import type { PageData } from './$types';
 	import { invalidateAll } from '$app/navigation';
+	import { invalid } from '@sveltejs/kit';
 
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
 	export let data: PageData;
 	let comment: String;
+	let isEditingComment: Boolean = false;
+	let editingCommentId: String = '';
+	let editingCommentContent: String;
 
 	const submitComment = async () => {
 		fetch('/api/addCommentToTask', {
@@ -31,6 +35,32 @@
 			})
 		}).then((response) => {
 			invalidateAll();
+		});
+	};
+
+	const editComment = (comment) => {
+		isEditingComment = true;
+		editingCommentId = comment.id;
+		editingCommentContent = comment.comment;
+	};
+
+	const editCommentReset = () => {
+		isEditingComment = false;
+		editingCommentId = '';
+		editingCommentContent = '';
+	};
+
+	const editCommentSave = () => {
+		fetch('/api/updateCommentFromTask', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				new_comment: editingCommentContent,
+				comment_id: editingCommentId
+			})
+		}).then((response) => {
+			invalidateAll();
+			editCommentReset();
 		});
 	};
 </script>
@@ -63,7 +93,7 @@
 							<span class="text-gray-600">Add a comment</span>
 							<textarea class="mt-1 block w-full rounded" rows="3" bind:value={comment} />
 						</label>
-						<button class="rounded bg-blue-600 px-3 py-2 text-sm text-blue-100">Comment</button>
+						<button class="buttonstyle">Comment</button>
 					</form>
 				</div>
 			</div>
@@ -81,19 +111,42 @@
 								minute: '2-digit'
 							})}
 						</dt>
-						<dd class="mt-1 px-20 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-							{comment.comment}
-						</dd>
-						<div class="flex">
-							<p class="optiontext cursor-pointer underline">Edit</p>
-							<p class="optiontext px-1">-</p>
-							<p
-								on:click={() => deleteComment(comment.id)}
-								class="optiontext cursor-pointer underline"
-							>
-								Delete
-							</p>
-						</div>
+						{#if editingCommentId !== comment.id}
+							<dd class="mt-1 px-20 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+								{comment.comment}
+							</dd>
+						{:else if isEditingComment && editingCommentId === comment.id}
+							<div>
+								<textarea
+									rows="2"
+									class="mt-1 w-full rounded sm:col-span-2 sm:mt-0"
+									bind:value={editingCommentContent}
+								/>
+								<div class="flex justify-start">
+									<button class="buttonstyle mx-2 sm:mt-0" on:click={editCommentSave}>Save</button>
+									<button class="buttonstyle mx-2 sm:mt-0" on:click={editCommentReset}
+										>Cancel</button
+									>
+								</div>
+							</div>
+						{/if}
+						{#if !isEditingComment}
+							<div class="flex">
+								<p
+									class="optiontext cursor-pointer underline"
+									on:click={() => editComment(comment)}
+								>
+									Edit
+								</p>
+								<p class="optiontext px-1">-</p>
+								<p
+									on:click={() => deleteComment(comment.id)}
+									class="optiontext cursor-pointer underline"
+								>
+									Delete
+								</p>
+							</div>
+						{/if}
 					</div>
 				{/each}
 			{/if}
@@ -104,5 +157,9 @@
 <style lang="postcss">
 	.optiontext {
 		@apply text-xs font-medium text-gray-800;
+	}
+
+	.buttonstyle {
+		@apply rounded bg-blue-600 px-3 py-2 text-sm text-blue-100;
 	}
 </style>
