@@ -22,7 +22,7 @@
 		"postcss-load-config": "^4.0.1",
 		"prettier": "^2.7.1",
 		"prettier-plugin-tailwindcss": "^0.1.13",
-		"prisma": "^4.5.0",
+		"prisma": "^4.10.1",
 		"sass": "^1.55.0",
 		"stwui": "^0.0.31-next",
 		"svelte": "^3.52.0",
@@ -34,7 +34,7 @@
 	"dependencies": {
 		"@lucia-auth/adapter-prisma": "^0.1.1",
 		"@lucia-auth/sveltekit": "^0.1.4",
-		"@prisma/client": "^4.5.0",
+		"@prisma/client": "^4.10.1",
 		"@supabase/auth-helpers-sveltekit": "^0.8.6",
 		"@supabase/supabase-js": "^2.1.0",
 		"moment": "^2.29.4",

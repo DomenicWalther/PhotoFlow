@@ -5,17 +5,10 @@
 	import moment from 'moment';
 	import { onMount } from 'svelte';
 
-	import { supabase } from '$lib/supabaseClient';
-
 	let value = new Date();
 	let task: String, extras: String, status: String;
 	let user_id: String;
 	extras = '';
-	onMount(async () => {
-		user_id = await supabase.auth.getUser().then((result) => {
-			return result.data.user.id;
-		});
-	});
 	const dispatch = createEventDispatcher();
 	function toggleModal() {
 		dispatch('toggle');

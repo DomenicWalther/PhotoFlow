@@ -4,9 +4,6 @@ import { redirect } from '@sveltejs/kit';
 import { getDay30DaysBack } from '$lib/utils/dateHelpers';
 export const load: PageServerLoad = async (event) => {
 	const { session, supabaseClient } = await getSupabase(event);
-	if (!session) {
-		throw redirect(303, '/login');
-	}
 	const user_id = session.user.id;
 
 	const clientCount = await supabaseClient

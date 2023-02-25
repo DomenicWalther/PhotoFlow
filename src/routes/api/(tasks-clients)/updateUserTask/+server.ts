@@ -1,17 +1,22 @@
-import { json } from '@sveltejs/kit';
-import { supabase } from '$lib/supabaseClient';
 import type { RequestHandler } from './$types';
+import { json } from '@sveltejs/kit';
+import prisma from '$lib/server/prisma';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
-		const session = await supabase.auth.getSession();
-		if (!session) return;
 		const { id, status, task, dueAt, additional_information } = await request.json();
-		const { error } = await supabase
-			.from('tasks')
-			.update({ id, status, task, dueAt: new Date(dueAt), additional_information })
-			.eq('id', id);
-
+		await prisma.tasks.update({
+			where: {
+				id: id
+			},
+			data: {
+				id: id,
+				status: status,
+				task: task,
+				dueAt: new Date(dueAt),
+				additional_information: additional_information
+			}
+		});
 		return json('Worked!');
 	} catch {
 		return json('Invalid!');

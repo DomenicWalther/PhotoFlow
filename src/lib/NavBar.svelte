@@ -1,6 +1,5 @@
 <script>
 	import { Avatar, Dropdown, Button } from 'stwui';
-	import { supabase } from './supabaseClient';
 	let visible = false;
 
 	let logoSource = '/logo.svg';
@@ -15,14 +14,6 @@
 </script>
 
 <header>
-	<a href="/"> <img src={logoSource} alt="logo" class="logo" /></a>
-	<nav>
-		<ul class="nav__links">
-			<li><a href="/taskOverview">Tasks</a></li>
-			<li><a href="#">Projects</a></li>
-			<li><a href="#">About</a></li>
-		</ul>
-	</nav>
 	<Dropdown bind:visible>
 		<Button slot="trigger" on:click={toggleDropdown}>
 			<Avatar initials="DW">
@@ -34,7 +25,6 @@
 			<Dropdown.Items.Item on:click={closeDropdown} label="Profile Settings" />
 			<Dropdown.Items.Item
 				on:click={async () => {
-					supabase.auth.signOut();
 					closeDropdown();
 				}}
 				label="Sign Out"

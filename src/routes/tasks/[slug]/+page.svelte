@@ -2,7 +2,6 @@
 	import TaskRow from './TaskRow.svelte';
 	import type { PageData } from './$types';
 	import { invalidateAll } from '$app/navigation';
-	import { invalid } from '@sveltejs/kit';
 
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -13,6 +12,7 @@
 	let editingCommentContent: String;
 
 	const submitComment = async () => {
+		console.log(data);
 		fetch('/api/addCommentToTask', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },

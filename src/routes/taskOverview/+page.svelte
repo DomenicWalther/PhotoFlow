@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { tasks, tasksSearchTerm, tasksFiltered } from '$lib/Stores/TaskStore';
 	import moment from 'moment';
-	import { supabase } from '$lib/supabaseClient';
 	import { sort_by } from '$lib/utils/generalHelpers';
 
 	import NewTask from '$lib/NewTask.svelte';
@@ -21,9 +20,6 @@
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
 	onMount(async () => {
-		user_id = await supabase.auth.getUser().then((result) => {
-			return result.data.user.id;
-		});
 		getAndCreateTasks();
 	});
 

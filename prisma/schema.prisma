@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:docker@localhost:5416/postgres"
+}
+
+model task_comments {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  task       Tasks    @relation(fields: [task_id], references: [id])
+  task_id    Int
+  comment    String
+}
+
+model Tasks {
+  id                     Int             @id @default(autoincrement())
+  created_at             DateTime        @default(now())
+  dueAt                  DateTime
+  task                   String
+  additional_information String
+  status                 String
+  is_finished            Boolean         @default(false)
+  task_comments          task_comments[]
+}
