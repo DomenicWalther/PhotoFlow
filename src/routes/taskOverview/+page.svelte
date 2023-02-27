@@ -8,6 +8,7 @@
 
 	import NewTask from '$lib/NewTask.svelte';
 	import UpdateTask from '$lib/UpdateTask.svelte';
+	import TaskRow from './TaskRow.svelte';
 
 	let openModal = false;
 	let isUpdateTaskOpen = false;
@@ -20,7 +21,6 @@
 	let idToDelete: Number | null;
 
 	$: tasksSearchTerm.set(searchQuery);
-	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
 	onMount(async () => {
 		getAndCreateTasks();
@@ -30,9 +30,10 @@
 		openModal = !openModal;
 	}
 
-	function openUpdateTask(id, name, dueAt, additional_information, status) {
+	function openUpdateTask(event) {
+		const task = event.detail.task;
 		isUpdateTaskOpen = true;
-		UpdateTaskValues = [id, name, dueAt, additional_information, status];
+		UpdateTaskValues = [task.id, task.name, task.dueAt, task.additional_information, task.status];
 	}
 
 	function closeUpdateTask() {
@@ -86,7 +87,6 @@
 	}
 
 	async function deleteTask() {
-		console.log('Deleting Task with ID: ', idToDelete);
 		fetch('/api/deleteUserTask', {
 			method: 'DELETE',
 			headers: { 'Content-Type': 'application/json' },
@@ -102,17 +102,17 @@
 		});
 	}
 
-	function toggleDeletion(deleteID: Number) {
-		idToDelete = deleteID;
+	function toggleDeletion(event) {
+		idToDelete = event.detail.id;
 		toggleDeleteConfirmation();
 	}
 
-	async function finishTask(finishID) {
+	async function finishTask(event) {
 		fetch('/api/finishUserTask', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				id: finishID
+				id: event.detail.id
 			})
 		}).then((response) => {
 			getAndCreateTasks();
@@ -139,6 +139,7 @@
 	}
 
 	function updateTaskFromModal(event) {
+		console.log(event.detail.values);
 		let id, name, dueAt, extra, status;
 		[id, name, dueAt, extra, status] = event.detail.values;
 		updateTask(id, status, name, dueAt, extra);
@@ -214,7 +215,7 @@
 		</Modal>
 	{/if}
 	{#if $tasks !== undefined}
-		<table class="max-w-7xl">
+		<table class="max-w-full">
 			<thead>
 				<tr>
 					<th on:click={() => sortTasks('name', false, (a) => a.toUpperCase())}
@@ -246,46 +247,13 @@
 			</thead>
 			<tbody>
 				{#each $tasksFiltered as task}
-					<tr>
-						<td><a href="/tasks/{task.id}">{task.name}</a></td>
-						<td class="table-date">{task.dueAt.toLocaleDateString('de-DE', dateOptions)}</td>
-						<td
-							><select
-								name="status"
-								id="status"
-								bind:value={task.status}
-								on:change={() =>
-									updateTask(
-										task.id,
-										task.status,
-										task.name,
-										task.dueAt,
-										task.additional_information
-									)}
-							>
-								<option value="NichtBearbeitet">Nicht Bearbeitet</option>
-								<option value="Entwickelt" selected="selected">Entwickelt</option>
-								<option value="Retuschiert">Retuschiert</option>
-								<option value="Gedruckt">Gedruckt</option>
-							</select></td
-						>
-						<td>{task.additional_information === null ? '' : task.additional_information}</td>
-						<td class="optionen"
-							><button on:click={() => toggleDeletion(task.id)}>Löschen</button><button
-								on:click={() =>
-									openUpdateTask(
-										task.id,
-										task.name,
-										task.dueAt,
-										task.additional_information,
-										task.status
-									)}>Bearbeiten</button
-							>
-							{#if !task.is_finished}
-								<button on:click={() => finishTask(task.id)}>Abgeschlossen</button>
-							{/if}
-						</td>
-					</tr>
+					<TaskRow
+						{task}
+						on:deleteTask={toggleDeletion}
+						on:finishTask={finishTask}
+						on:updateTask={updateTaskFromModal}
+						on:openUpdateTask={openUpdateTask}
+					/>
 				{/each}
 			</tbody>
 		</table>
