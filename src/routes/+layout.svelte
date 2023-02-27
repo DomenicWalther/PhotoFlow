@@ -1,8 +1,9 @@
 <script>
 	import '../app.postcss';
 	import 'fluent-svelte/theme.css';
-	import { invalidate } from '$app/navigation';
-	import { onMount } from 'svelte';
 </script>
 
+<svelte:head>
+	<title>Auftragsliste</title>
+</svelte:head>
 <slot />

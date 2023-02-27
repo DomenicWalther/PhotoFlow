@@ -1,22 +1,25 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { tasks, tasksSearchTerm, tasksFiltered } from '$lib/Stores/TaskStore';
+	import { tasks, tasksSearchTerm, tasksFiltered, showFinishedTasks } from '$lib/Stores/TaskStore';
 	import moment from 'moment';
 	import { sort_by } from '$lib/utils/generalHelpers';
+	import { Card, Modal } from 'stwui';
+	import toast, { Toaster } from 'svelte-french-toast';
 
 	import NewTask from '$lib/NewTask.svelte';
 	import UpdateTask from '$lib/UpdateTask.svelte';
 
 	let openModal = false;
 	let isUpdateTaskOpen = false;
+	let isDeleteConfirmationOpen = false;
 	let UpdateTaskValues: Array<String | Number | Date> = [];
 	let sortSelected = 'dueAt';
 	let sortOnce = true;
 	let searchQuery = '';
 	let user_id: String;
+	let idToDelete: Number | null;
 
 	$: tasksSearchTerm.set(searchQuery);
-
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
 	onMount(async () => {
@@ -44,7 +47,6 @@
 				user_id
 			})
 		});
-
 		const result = await response.json();
 		return result;
 	}
@@ -57,7 +59,8 @@
 					dueAt: new Date(i.dueAt.replace(' ', 'T')),
 					additional_information: i.additional_information,
 					status: i.status,
-					id: i.id
+					id: i.id,
+					is_finished: i.is_finished
 				};
 			});
 		} else {
@@ -82,17 +85,26 @@
 		createTasks(await getCurrentTasks());
 	}
 
-	async function deleteTask(deleteID) {
+	async function deleteTask() {
+		console.log('Deleting Task with ID: ', idToDelete);
 		fetch('/api/deleteUserTask', {
 			method: 'DELETE',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				task_id: deleteID
+				task_id: idToDelete
 			})
 		}).then((response) => {
 			getAndCreateTasks();
+			idToDelete = null;
+			toggleDeleteConfirmation();
+			toast.success('Auftrag gelöscht!');
 			response.json();
 		});
+	}
+
+	function toggleDeletion(deleteID: Number) {
+		idToDelete = deleteID;
+		toggleDeleteConfirmation();
 	}
 
 	async function finishTask(finishID) {
@@ -104,6 +116,7 @@
 			})
 		}).then((response) => {
 			getAndCreateTasks();
+			toast.success('Auftrag abgeschlossen!');
 			response.json();
 		});
 	}
@@ -130,24 +143,78 @@
 		[id, name, dueAt, extra, status] = event.detail.values;
 		updateTask(id, status, name, dueAt, extra);
 	}
+
+	function toggleDeleteConfirmation() {
+		isDeleteConfirmationOpen = !isDeleteConfirmationOpen;
+	}
 </script>
 
-<div class="TaskManagement">
-	<button on:click={toggleNewTask} type="button" class="neuer-auftrag">Neuer Auftrag</button>
-	<input type="text" placeholder="Filter.." bind:value={searchQuery} />
+<Toaster />
+<div class="my-0 mx-auto flex w-10/12 flex-col justify-center pt-10">
+	<div class="mb-5 mt-0">
+		Abgeschlossene Aufträge anzeigen
+		<input type="checkbox" bind:checked={$showFinishedTasks} class="cursor-pointer" />
+	</div>
+	<button
+		on:click={toggleNewTask}
+		type="button"
+		class="mt-0 mb-7 rounded-2xl bg-blue-600 p-7 text-white transition-all hover:scale-105 hover:bg-blue-500"
+		>Neuer Auftrag</button
+	>
+
+	<div class="relative z-0 pb-5">
+		<input
+			type="text"
+			id="floating_standard"
+			class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+			placeholder=" "
+			bind:value={searchQuery}
+		/>
+		<label
+			for="floating_standard"
+			class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500"
+			>Filter...</label
+		>
+	</div>
 
 	{#if openModal}
-		<NewTask on:toggle={toggleNewTask} on:fetchTasks={getAndCreateTasks} />
+		<NewTask
+			on:toggle={toggleNewTask}
+			on:fetchTasks={getAndCreateTasks}
+			on:createToast={() => toast.success('Auftrag erfolgreich erstellt!')}
+		/>
 	{/if}
 	{#if isUpdateTaskOpen}
 		<UpdateTask
 			on:toggle={closeUpdateTask}
 			on:taskUpdate={updateTaskFromModal}
 			updateValues={UpdateTaskValues}
+			on:createToast={() => toast.success('Auftrag erfolgreich bearbeitet!')}
 		/>
 	{/if}
+	{#if isDeleteConfirmationOpen}
+		<Modal handleClose={toggleDeleteConfirmation}>
+			<Modal.Content slot="content">
+				<Card>
+					<Card.Header slot="header">Wirklich löschen?</Card.Header>
+					<Card.Content slot="content">
+						<p class="mb-4 text-base">
+							Der Auftrag "{$tasks.find((item) => item.id === idToDelete).name}" wird gelöscht!
+						</p>
+						<button
+							on:click={toggleDeleteConfirmation}
+							class="buttonstyle bg-blue-600 hover:bg-blue-500">Bitte abbrechen!</button
+						>
+						<button on:click={deleteTask} class="buttonstyle bg-red-700  hover:bg-red-600"
+							>Ja, wirklich löschen!</button
+						>
+					</Card.Content>
+				</Card>
+			</Modal.Content>
+		</Modal>
+	{/if}
 	{#if $tasks !== undefined}
-		<table>
+		<table class="max-w-7xl">
 			<thead>
 				<tr>
 					<th on:click={() => sortTasks('name', false, (a) => a.toUpperCase())}
@@ -181,7 +248,7 @@
 				{#each $tasksFiltered as task}
 					<tr>
 						<td><a href="/tasks/{task.id}">{task.name}</a></td>
-						<td>{task.dueAt.toLocaleDateString('de-DE', dateOptions)}</td>
+						<td class="table-date">{task.dueAt.toLocaleDateString('de-DE', dateOptions)}</td>
 						<td
 							><select
 								name="status"
@@ -203,8 +270,8 @@
 							</select></td
 						>
 						<td>{task.additional_information === null ? '' : task.additional_information}</td>
-						<td
-							><button on:click={() => deleteTask(task.id)}>Delete</button><br /><button
+						<td class="optionen"
+							><button on:click={() => toggleDeletion(task.id)}>Löschen</button><button
 								on:click={() =>
 									openUpdateTask(
 										task.id,
@@ -212,10 +279,12 @@
 										task.dueAt,
 										task.additional_information,
 										task.status
-									)}>Edit</button
+									)}>Bearbeiten</button
 							>
-							<button on:click={() => finishTask(task.id)}>Finish</button></td
-						>
+							{#if !task.is_finished}
+								<button on:click={() => finishTask(task.id)}>Abgeschlossen</button>
+							{/if}
+						</td>
 					</tr>
 				{/each}
 			</tbody>
@@ -227,33 +296,28 @@
 
 <style lang="scss">
 	$background-color: #edf0f1;
-	$accent-color: rgba(0, 136, 169, 1);
+	$accent-color: rgb(37 99 235);
+	* {
+		font-size: 20px;
+	}
+
+	.table-date {
+		white-space: nowrap;
+	}
+	.optionen {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+
+		button {
+			@apply m-1 w-full  rounded-lg bg-blue-600 p-3 text-base text-white transition-all hover:scale-105 hover:bg-blue-500;
+		}
+	}
 
 	#status {
 		background-color: $background-color;
 		border: none;
 		cursor: pointer;
-	}
-
-	.TaskManagement {
-		padding-top: 100px;
-		display: flex;
-		justify-content: center;
-		flex-direction: column;
-		width: 85%;
-		margin: 0 auto;
-	}
-	.neuer-auftrag {
-		color: white;
-		padding: 30px;
-		margin-bottom: 30px;
-		border-radius: 15px;
-		background-color: $accent-color;
-		transition: all 0.3s ease 0s;
-
-		&:hover {
-			background-color: rgba(0, 136, 169, 0.9);
-		}
 	}
 
 	table {
@@ -337,5 +401,9 @@
 			border-right: 29px solid transparent;
 			transform: scale(0.4);
 		}
+	}
+
+	.buttonstyle {
+		@apply rounded px-3 py-2 text-sm text-white transition-colors;
 	}
 </style>

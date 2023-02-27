@@ -65,23 +65,24 @@
 	};
 </script>
 
-<p />
-
-<div class="overflow-hidden bg-white shadow sm:rounded-lg">
+<div class="overflow-hidden bg-white pt-5 shadow sm:rounded-lg">
+	<a href="/taskOverview" class="mt-5 py-5 px-4 text-sm font-medium leading-6 text-gray-900 sm:px-6"
+		><button class="buttonstyle">Zurück zur Übersicht</button>
+	</a>
 	<div class="px-4 py-5 sm:px-6">
-		<h3 class="text-lg font-medium leading-6 text-gray-900">Client Information</h3>
-		<p class="mt-1 max-w-2xl text-sm text-gray-500">Task details</p>
+		<h3 class="text-lg font-medium leading-6 text-gray-900">Kunden Informationen</h3>
+		<p class="mt-1 max-w-2xl text-sm text-gray-500">Auftragsdetails</p>
 	</div>
 	<div class="border-t border-gray-200">
 		<dl>
 			<TaskRow
-				label="Client Name"
+				label="Kundenname"
 				data={data.tasks?.task.charAt(0).toUpperCase() + data.tasks?.task.slice(1)}
 			/>
-			<TaskRow label="Category" data={data.tasks?.additional_information} isDark />
-			<TaskRow label="Status" data={data.tasks?.status} />
+			<TaskRow label="Zusätzliche Informationen" data={data.tasks?.additional_information} isDark />
+			<TaskRow label="Aktueller Status" data={data.tasks?.status} />
 			<TaskRow
-				label="Due At"
+				label="Abholdatum"
 				data={new Date(data.tasks?.dueAt).toLocaleDateString('de-DE', dateOptions)}
 				isDark
 			/>
@@ -90,10 +91,10 @@
 				<div class="max-w-lg ">
 					<form on:submit|preventDefault={submitComment} class="w-full p-4">
 						<label class="mb-2 block">
-							<span class="text-gray-600">Add a comment</span>
+							<span class="text-gray-600">Füge einen Kommentar hinzu:</span>
 							<textarea class="mt-1 block w-full rounded" rows="3" bind:value={comment} />
 						</label>
-						<button class="buttonstyle">Comment</button>
+						<button class="buttonstyle">Kommentieren</button>
 					</form>
 				</div>
 			</div>
@@ -136,14 +137,14 @@
 									class="optiontext cursor-pointer underline"
 									on:click={() => editComment(comment)}
 								>
-									Edit
+									Bearbeiten
 								</p>
 								<p class="optiontext px-1">-</p>
 								<p
 									on:click={() => deleteComment(comment.id)}
 									class="optiontext cursor-pointer underline"
 								>
-									Delete
+									Löschen
 								</p>
 							</div>
 						{/if}
@@ -160,6 +161,10 @@
 	}
 
 	.buttonstyle {
-		@apply rounded bg-blue-600 px-3 py-2 text-sm text-blue-100;
+		@apply rounded bg-blue-600 px-3 py-2 text-sm text-blue-100 transition-colors;
+	}
+
+	.buttonstyle:hover {
+		@apply bg-blue-700 transition-colors;
 	}
 </style>

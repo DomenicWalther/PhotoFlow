@@ -11,11 +11,16 @@
 		dispatch('toggle');
 	}
 
+	function createToast() {
+		dispatch('createToast');
+	}
+
 	function updateTasks() {
 		dispatch('taskUpdate', {
 			values: updateValues
 		});
 		toggleModal();
+		createToast();
 	}
 </script>
 
@@ -38,7 +43,10 @@
 						<option value="Retuschiert">Retuschiert</option>
 						<option value="Gedruckt">Gedruckt</option></select
 					>
-					<button>Bestätigen</button>
+					<button
+						class="mt-4 rounded bg-blue-500 px-3 py-2 text-sm text-white transition-colors hover:bg-blue-600"
+						>Bestätigen</button
+					>
 				</form>
 			</Card.Content>
 		</Card>
@@ -57,21 +65,6 @@
 	form {
 		.inputField {
 			margin-bottom: 10px;
-		}
-	}
-
-	button {
-		margin-top: 10px;
-		padding: 9px 25px;
-		background-color: rgba(0, 136, 169, 1);
-		color: #edf0f1;
-		border: none;
-		border-radius: 50px;
-		cursor: pointer;
-		transition: all 0.3s ease 0s;
-
-		&:hover {
-			background-color: rgba(0, 136, 169, 0.8);
 		}
 	}
 </style>

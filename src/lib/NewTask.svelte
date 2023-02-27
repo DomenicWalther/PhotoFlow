@@ -3,7 +3,6 @@
 	import { Card, Modal } from 'stwui';
 	import { createEventDispatcher } from 'svelte';
 	import moment from 'moment';
-	import { onMount } from 'svelte';
 
 	let value = new Date();
 	let task: String, extras: String, status: String;
@@ -16,6 +15,10 @@
 
 	function getCurrentTasks() {
 		dispatch('fetchTasks');
+	}
+
+	function createToast() {
+		dispatch('createToast');
 	}
 
 	const submitForm = async (event) => {
@@ -31,6 +34,7 @@
 			})
 		}).then((response) => {
 			getCurrentTasks();
+			createToast();
 			response.json();
 		});
 		toggleModal();
@@ -51,7 +55,7 @@
 				</div>
 				<form on:submit|preventDefault={submitForm}>
 					Familie
-					<input type="text" bind:value={task} class="inputField" />
+					<input type="text" bind:value={task} class="inputField" autofocus />
 					Extra
 					<input type="text" bind:value={extras} class="inputField" />
 					<select name="status" id="status" bind:value={status}>
@@ -60,7 +64,10 @@
 						<option value="Retuschiert">Retuschiert</option>
 						<option value="Gedruckt">Gedruckt</option></select
 					>
-					<button>Bestätigen</button>
+					<button
+						class="mt-4 rounded bg-blue-500 px-3 py-2 text-sm text-white transition-colors hover:bg-blue-600"
+						>Bestätigen</button
+					>
 				</form>
 			</Card.Content>
 		</Card>
@@ -79,21 +86,6 @@
 	form {
 		.inputField {
 			margin-bottom: 10px;
-		}
-	}
-
-	button {
-		margin-top: 10px;
-		padding: 9px 25px;
-		background-color: rgba(0, 136, 169, 1);
-		color: #edf0f1;
-		border: none;
-		border-radius: 50px;
-		cursor: pointer;
-		transition: all 0.3s ease 0s;
-
-		&:hover {
-			background-color: rgba(0, 136, 169, 0.8);
 		}
 	}
 </style>
