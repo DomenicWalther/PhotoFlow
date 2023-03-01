@@ -36,15 +36,36 @@
 </script>
 
 <tr>
-	<td><a href="/tasks/{task.id}">{task.name}</a></td>
+	<td
+		><a href="/tasks/{task.id}">{task.name}</a>{#if task.amount_of_comments > 0}
+			<p class="whitespace-nowrap text-sm">
+				Auftrag hat {task.amount_of_comments}
+				{#if task.amount_of_comments > 1}Kommentare{:else}Kommentar{/if}
+			</p>{/if}</td
+	>
 	<td class="whitespace-nowrap">{task.dueAt.toLocaleDateString('de-DE', dateOptions)}</td>
 	<td>
-		<select name="status" id="status" bind:value={task.status} on:change={() => updateTask()}>
-			<option value="NichtBearbeitet">Nicht Bearbeitet</option>
-			<option value="Entwickelt" selected="selected">Entwickelt</option>
-			<option value="Retuschiert">Retuschiert</option>
-			<option value="Gedruckt">Gedruckt</option>
-		</select>
+		<div class="flex">
+			<h1
+				class="pr-2 {task.status === 'NichtBearbeitet'
+					? 'text-gray-700'
+					: task.status === 'Entwickelt'
+					? 'text-red-700'
+					: task.status === 'Retuschiert'
+					? 'text-yellow-500'
+					: task.status === 'Gedruckt'
+					? 'text-green-600'
+					: ''}"
+			>
+				&#x2022
+			</h1>
+			<select name="status" id="status" bind:value={task.status} on:change={() => updateTask()}>
+				<option value="NichtBearbeitet">RAW</option>
+				<option value="Entwickelt" selected="selected">Entwickelt</option>
+				<option value="Retuschiert">Retuschiert</option>
+				<option value="Gedruckt">Gedruckt</option>
+			</select>
+		</div>
 	</td>
 	<td>{task.additional_information === null ? '' : task.additional_information}</td>
 	<td class="optionen">
@@ -73,17 +94,20 @@
 <style lang="scss">
 	$background-color: #edf0f1;
 	$accent-color: rgb(37 99 235);
-	table {
-		font-size: 24px;
-		background-color: $background-color;
-		box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1);
-		border-collapse: collapse;
-		color: white;
-	}
 
-	td,
-	th {
-		padding: 25px 55px;
+	td {
+		padding: 15px;
 		text-align: left;
+	}
+	#status {
+		background-color: $background-color;
+		border-radius: 0.25rem;
+		cursor: pointer;
+	}
+	tr:nth-child(even) {
+		background-color: #e5e4e4;
+		#status {
+			background-color: #e5e4e4;
+		}
 	}
 </style>

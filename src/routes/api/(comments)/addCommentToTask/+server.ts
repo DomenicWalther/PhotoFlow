@@ -11,7 +11,14 @@ export const POST: RequestHandler = async ({ request }) => {
 				created_at: new Date()
 			}
 		});
-		console.log(comment);
+		await prisma.tasks.update({
+			where: {
+				id: task_id
+			},
+			data: {
+				amount_of_comments: { increment: 1 }
+			}
+		});
 		return json('Successful!');
 	} catch {
 		return json('Invalid!');

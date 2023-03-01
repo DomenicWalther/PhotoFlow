@@ -61,7 +61,8 @@
 					additional_information: i.additional_information,
 					status: i.status,
 					id: i.id,
-					is_finished: i.is_finished
+					is_finished: i.is_finished,
+					amount_of_comments: i.amount_of_comments
 				};
 			});
 		} else {
@@ -139,7 +140,6 @@
 	}
 
 	function updateTaskFromModal(event) {
-		console.log(event.detail.values);
 		let id, name, dueAt, extra, status;
 		[id, name, dueAt, extra, status] = event.detail.values;
 		updateTask(id, status, name, dueAt, extra);
@@ -152,6 +152,7 @@
 
 <Toaster />
 <div class="my-0 mx-auto flex w-10/12 flex-col justify-center pt-10">
+	<!-- <div class="my-3"><HackerHeading text="Aufträge" /></div> -->
 	<div class="mb-5 mt-0">
 		Abgeschlossene Aufträge anzeigen
 		<input type="checkbox" bind:checked={$showFinishedTasks} class="cursor-pointer" />
@@ -219,7 +220,7 @@
 			<thead>
 				<tr>
 					<th on:click={() => sortTasks('name', false, (a) => a.toUpperCase())}
-						>Familie<i
+						>Aufträge<i
 							class:caret-down={sortSelected === 'name' && sortOnce}
 							class:caret-up={sortSelected === 'name' && !sortOnce}
 						/></th
@@ -282,12 +283,6 @@
 		}
 	}
 
-	#status {
-		background-color: $background-color;
-		border: none;
-		cursor: pointer;
-	}
-
 	table {
 		font-size: 24px;
 		background-color: $background-color;
@@ -296,13 +291,9 @@
 		color: white;
 	}
 
-	td,
 	th {
 		padding: 25px 55px;
 		text-align: left;
-	}
-
-	th {
 		cursor: pointer;
 		transition: all 0.3s ease 0s;
 		&:last-child {
@@ -318,10 +309,6 @@
 	}
 	tbody {
 		color: #202e39;
-	}
-
-	tr:nth-child(even) {
-		background-color: #e9e9e9;
 	}
 
 	.caret-down {

@@ -31,7 +31,8 @@
 			method: 'DELETE',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				comment_id: comment_id
+				comment_id: comment_id,
+				task_id: data.tasks?.id
 			})
 		}).then((response) => {
 			invalidateAll();
