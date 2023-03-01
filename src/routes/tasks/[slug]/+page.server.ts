@@ -11,6 +11,11 @@ export const load: PageServerLoad = async (event) => {
 			}
 		});
 		const taskCommentsFromTaskID = await prisma.task_comments.findMany({
+			orderBy: [
+				{
+					created_at: 'desc'
+				}
+			],
 			where: {
 				task_id: Number(taskID)
 			},
