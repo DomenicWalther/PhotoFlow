@@ -270,19 +270,6 @@
 		font-size: 20px;
 	}
 
-	.table-date {
-		white-space: nowrap;
-	}
-	.optionen {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-
-		button {
-			@apply m-1 w-full  rounded-lg bg-blue-600 p-3 text-base text-white transition-all hover:scale-105 hover:bg-blue-500;
-		}
-	}
-
 	table {
 		font-size: 24px;
 		background-color: $background-color;
