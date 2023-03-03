@@ -17,7 +17,7 @@
 </script>
 
 <ul
-	class="absolute left-8 top-0 rounded-lg shadow-lg"
+	class="absolute left-8 top-0 z-50 rounded-lg shadow-lg"
 	use:clickOutside
 	on:click_outside={handleClickOutside}
 >
