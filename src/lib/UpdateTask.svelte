@@ -30,7 +30,7 @@
 			<Card.Header slot="header">Auftrag bearbeiten</Card.Header>
 			<Card.Content slot="content">
 				<div class="Calendar">
-					<CalendarView bind:value={updateValues[2]} />
+					<CalendarView bind:value={updateValues[2]} weekStart={1} />
 				</div>
 				<form on:submit|preventDefault={updateTasks}>
 					Familie

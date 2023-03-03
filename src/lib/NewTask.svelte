@@ -51,7 +51,7 @@
 			<Card.Header slot="header">Neuer Auftrag</Card.Header>
 			<Card.Content slot="content">
 				<div class="Calendar">
-					<CalendarView bind:value />
+					<CalendarView bind:value weekStart={1} />
 				</div>
 				<form on:submit|preventDefault={submitForm}>
 					Familie
