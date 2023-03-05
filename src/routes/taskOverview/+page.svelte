@@ -158,18 +158,18 @@
 </script>
 
 <Toaster />
+<button
+	on:click={toggleNewTask}
+	type="button"
+	class="absolute bottom-10 right-10 h-20 w-20 rounded-[50%] bg-blue-500 text-4xl text-white transition-all hover:scale-105 hover:bg-blue-500"
+	>+</button
+>
 <div class="my-0 mx-auto flex w-10/12 flex-col justify-center pt-10">
 	<!-- <div class="my-3"><HackerHeading text="Aufträge" /></div> -->
 	<div class="mb-5 mt-0">
 		Abgeschlossene Aufträge anzeigen
 		<input type="checkbox" bind:checked={$showFinishedTasks} class="cursor-pointer" />
 	</div>
-	<button
-		on:click={toggleNewTask}
-		type="button"
-		class="mt-0 mb-7 rounded-2xl bg-blue-600 p-7 text-white transition-all hover:scale-105 hover:bg-blue-500"
-		>Neuer Auftrag</button
-	>
 
 	<div class="relative z-0 pb-5">
 		<input
@@ -225,7 +225,7 @@
 	{#if $tasks !== undefined}
 		<table class="max-w-full">
 			<thead>
-				<tr>
+				<tr class="text-left">
 					<th on:click={() => sortTasks('name', false, (a) => a.toUpperCase())}
 						>Aufträge<i
 							class:caret-down={sortSelected === 'name' && sortOnce}
@@ -273,12 +273,9 @@
 <style lang="scss">
 	$background-color: #edf0f1;
 	$accent-color: rgb(37 99 235);
-	* {
-		font-size: 20px;
-	}
 
 	table {
-		font-size: 24px;
+		font-size: 20px;
 		background-color: $background-color;
 		box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1);
 		border-collapse: collapse;
@@ -287,11 +284,15 @@
 
 	th {
 		padding: 25px 55px;
+		padding-left: 10px;
 		text-align: left;
 		cursor: pointer;
 		transition: all 0.3s ease 0s;
 		&:last-child {
 			cursor: default;
+		}
+		&:first-child {
+			padding-left: 30px;
 		}
 		&:hover {
 			color: $background-color;

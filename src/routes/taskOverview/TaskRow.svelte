@@ -1,19 +1,9 @@
 <script lang="ts">
 	import AdditionalOptions from '$lib/components/AdditionalOptions.svelte';
-	import { createEventDispatcher, tick } from 'svelte';
-	import { FallingConfetti } from 'svelte-canvas-confetti';
-
+	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
-
 	export let task;
 	let isAdditionalOptionsVisible = false;
-	let fallingConfetti = false;
-
-	const makeFallingConfetti = async () => {
-		fallingConfetti = false;
-		await tick();
-		fallingConfetti = true;
-	};
 
 	function deleteTask() {
 		dispatch('deleteTask', {
@@ -26,7 +16,6 @@
 		dispatch('finishTask', {
 			id: task.id
 		});
-		makeFallingConfetti();
 		isAdditionalOptionsVisible = false;
 	}
 
@@ -46,9 +35,6 @@
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 </script>
 
-{#if fallingConfetti}
-	<FallingConfetti particleCount={300} />
-{/if}
 <tr>
 	<td
 		><a href="/tasks/{task.id}">{task.name}</a>{#if task.amount_of_comments > 0}
@@ -110,8 +96,11 @@
 	$accent-color: rgb(37 99 235);
 
 	td {
-		padding: 15px;
+		padding: 10px;
 		text-align: left;
+		&:first-child {
+			padding-left: 30px;
+		}
 	}
 	#status {
 		background-color: $background-color;
