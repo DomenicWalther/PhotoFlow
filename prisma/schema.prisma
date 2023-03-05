@@ -13,7 +13,7 @@ datasource db {
 model task_comments {
   id         Int      @id @default(autoincrement())
   created_at DateTime @default(now())
-  task       Tasks    @relation(fields: [task_id], references: [id])
+  task       Tasks    @relation(fields: [task_id], references: [id], onDelete: Cascade)
   task_id    Int
   comment    String
 }
