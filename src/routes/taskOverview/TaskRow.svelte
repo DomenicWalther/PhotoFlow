@@ -81,9 +81,11 @@
 			</select>
 		</div>
 	</td>
-	<td>{task.additional_information === null ? '' : task.additional_information}</td>
+	<td class="break-words"
+		>{task.additional_information === null ? '' : task.additional_information}</td
+	>
 	<td class="optionen">
-		<div class="center moreButton relative hidden text-sm lg:block lg:text-lg">
+		<div class="center moreButton relative text-sm lg:block lg:text-lg">
 			<button
 				on:click={() => {
 					isAdditionalOptionsVisible = !isAdditionalOptionsVisible;
