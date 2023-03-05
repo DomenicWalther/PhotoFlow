@@ -1,7 +1,17 @@
 <script lang="ts">
 	import AdditionalOptions from '$lib/components/AdditionalOptions.svelte';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
+	import { FallingConfetti } from 'svelte-canvas-confetti';
+
 	const dispatch = createEventDispatcher();
+	let fallingConfetti = false;
+
+	const makeFallingConfetti = async () => {
+		fallingConfetti = false;
+		await tick();
+		fallingConfetti = true;
+	};
+
 	export let task;
 	let isAdditionalOptionsVisible = false;
 
@@ -17,6 +27,7 @@
 			id: task.id
 		});
 		isAdditionalOptionsVisible = false;
+		makeFallingConfetti();
 	}
 
 	function updateTask() {
@@ -35,6 +46,9 @@
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 </script>
 
+{#if fallingConfetti}
+	<FallingConfetti particleCount={300} />
+{/if}
 <tr>
 	<td
 		><a href="/tasks/{task.id}">{task.name}</a>{#if task.amount_of_comments > 0}
