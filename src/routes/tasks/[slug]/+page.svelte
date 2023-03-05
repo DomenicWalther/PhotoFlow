@@ -2,7 +2,6 @@
 	import TaskRow from './TaskRow.svelte';
 	import type { PageData } from './$types';
 	import { invalidateAll } from '$app/navigation';
-	import { invalid } from '@sveltejs/kit';
 
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
