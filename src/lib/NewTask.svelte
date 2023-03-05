@@ -3,6 +3,7 @@
 	import { Card, Modal } from 'stwui';
 	import { createEventDispatcher } from 'svelte';
 	import moment from 'moment';
+	import { io } from '$lib/realtime';
 
 	let value = new Date();
 	let task: String, extras: String, status: String;
@@ -36,6 +37,7 @@
 			getCurrentTasks();
 			createToast();
 			response.json();
+			io.emit('database-change');
 		});
 		toggleModal();
 		event.target.reset();

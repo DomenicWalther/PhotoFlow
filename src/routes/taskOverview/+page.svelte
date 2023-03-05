@@ -5,6 +5,7 @@
 	import { sort_by } from '$lib/utils/generalHelpers';
 	import { Card, Modal } from 'stwui';
 	import toast, { Toaster } from 'svelte-french-toast';
+	import { io } from '$lib/realtime';
 
 	import NewTask from '$lib/NewTask.svelte';
 	import UpdateTask from '$lib/UpdateTask.svelte';
@@ -24,6 +25,9 @@
 
 	onMount(async () => {
 		getAndCreateTasks();
+		io.on('database-changed', (...args) => {
+			getAndCreateTasks();
+		});
 	});
 
 	function toggleNewTask() {
@@ -100,6 +104,7 @@
 			toggleDeleteConfirmation();
 			toast.success('Auftrag gelöscht!');
 			response.json();
+			io.emit('database-change');
 		});
 	}
 
@@ -119,6 +124,7 @@
 			getAndCreateTasks();
 			toast.success('Auftrag abgeschlossen!');
 			response.json();
+			io.emit('database-change');
 		});
 	}
 
@@ -135,6 +141,7 @@
 			})
 		}).then((response) => {
 			response.json;
+			io.emit('database-change');
 			getAndCreateTasks();
 		});
 	}
