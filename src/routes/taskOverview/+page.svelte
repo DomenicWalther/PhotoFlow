@@ -141,6 +141,7 @@
 			})
 		}).then((response) => {
 			response.json;
+			toast.success('Auftrag erfolgreich geändert!');
 			io.emit('database-change');
 			getAndCreateTasks();
 		});
