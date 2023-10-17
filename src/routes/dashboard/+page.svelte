@@ -26,6 +26,9 @@
 	};
 </script>
 
+<button class="rounded-lg bg-blue-600 py-5 px-10 font-bold text-white"
+	><a href="/taskOverview">Aufgabenübersicht</a></button
+>
 <div class="board m-5 flex w-full ">
 	{#each data.columns as column}
 		{@const cards = data.kanban.filter((c) => c.taskColumn === column.id)}
@@ -57,7 +60,7 @@
 				class="new-card mt-5 w-full  rounded-md border-2 border-dashed border-gray-300 py-3 text-center font-bold text-gray-500"
 				on:click={() => toggleNewKanbanCardModal(column.id)}
 			>
-				+ Add another card
+				+ Neue Aufgabe hinzufügen
 			</button>
 		</div>
 	{/each}

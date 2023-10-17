@@ -42,7 +42,7 @@
 		<Card>
 			<Card.Header slot="header">
 				<div class="flex flex-row justify-between">
-					<div class="font-bold">Add new Task</div>
+					<div class="font-bold">Neue Aufgabe hinzufügen</div>
 					<button
 						class="transition-color rounded-lg text-gray-400 hover:text-black"
 						on:click={toggleModal}>✖</button
@@ -52,7 +52,7 @@
 			<Card.Content slot="content">
 				<form on:submit|preventDefault={submitForm}>
 					<div>
-						<label for="taskName" class="text-sm font-semibold text-gray-700">Task Name</label>
+						<label for="taskName" class="text-sm font-semibold text-gray-700">Aufgabenname</label>
 						<input
 							type="text"
 							id="taskName"
@@ -64,7 +64,7 @@
 					</div>
 					<div class="mt-3">
 						<label for="task-description" class="text-sm font-semibold text-gray-700"
-							>Enter a description</label
+							>Gebe eine Beschreibung an:</label
 						>
 						<textarea
 							name="description"
@@ -88,12 +88,12 @@
 						<button
 							type="submit"
 							class="rounded-lg border-[1px] border-blue-600 bg-blue-600 px-7 py-[.625rem] text-sm font-semibold text-white transition-colors hover:bg-blue-700"
-							>+ Add Card</button
+							>+ Aufgabe hinzufügen</button
 						>
 						<button
 							type="button"
 							class="ml-3 rounded-lg border-[1px] border-gray-200 px-7 py-[.625rem] text-sm font-semibold text-gray-700 hover:bg-gray-50"
-							on:click={toggleModal}>Close</button
+							on:click={toggleModal}>Schließen</button
 						>
 					</div>
 				</form>

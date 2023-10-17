@@ -10,15 +10,15 @@ export const load: PageServerLoad = async (event) => {
 			columns: [
 				{
 					id: '1',
-					label: 'To Do'
+					label: 'To-Do'
 				},
 				{
 					id: '2',
-					label: 'In Progress'
+					label: 'In Bearbeitung'
 				},
 				{
 					id: '3',
-					label: 'Done'
+					label: 'Fertig'
 				}
 			]
 		};
