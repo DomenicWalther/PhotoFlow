@@ -37,6 +37,7 @@
 		"qrcode": "^1.5.1",
 		"socket.io": "^4.6.1",
 		"socket.io-client": "^4.6.1",
+		"sqlite3": "^5.1.7",
 		"svelte-canvas-confetti": "^0.6.0",
 		"svelte-forms-lib": "^2.0.1",
 		"svelte-french-toast": "^1.0.3",

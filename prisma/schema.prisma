@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = "postgresql://postgres:docker@localhost:5416/postgres"
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model task_comments {
