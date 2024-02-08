@@ -7,13 +7,21 @@
 	export let data: PageData;
 
 	let isNewKanbanCardModalOpen = false;
+	let isUpdateKanbanCardModalOpen = false;
 	let NewKanbanCardColumn = '';
+	let updateKanbanDescription = '';
+	let updateKanbanTaskName = '';
 
 	const toggleNewKanbanCardModal = (column_id) => {
 		isNewKanbanCardModalOpen = !isNewKanbanCardModalOpen;
 		NewKanbanCardColumn = column_id;
 	};
 
+	const toggleUpdateKanbanCardModal = (taskName, taskDescription) => {
+		isUpdateKanbanCardModalOpen = !isUpdateKanbanCardModalOpen;
+		updateKanbanDescription = taskDescription;
+		updateKanbanTaskName = taskName;
+	};
 	const updateKanbanDatabase = (card) => {
 		console.log(card);
 		fetch('/api/updateCard', {
@@ -47,7 +55,10 @@
 			<h3 class="text-base">{column.label}</h3>
 			{#if cards.length > 0}
 				{#each cards as card}
-					<div use:draggable={card.id}>
+					<div
+						use:draggable={card.id}
+						on:click={() => toggleUpdateKanbanCardModal(card.task, card.additional_information)}
+					>
 						<Card
 							taskHeading={card.task}
 							taskDescription={card.additional_information}
@@ -69,6 +80,16 @@
 
 {#if isNewKanbanCardModalOpen}
 	<NewKanbanCard on:toggleModal={toggleNewKanbanCardModal} column_id={NewKanbanCardColumn} />
+{/if}
+
+{#if isUpdateKanbanCardModalOpen}
+	<NewKanbanCard
+		on:toggleModal={toggleUpdateKanbanCardModal}
+		column_id={NewKanbanCardColumn}
+		taskName={updateKanbanTaskName}
+		taskDescription={updateKanbanDescription}
+		buttonText={'Aufgabe aktualisieren'}
+	/>
 {/if}
 
 <style>

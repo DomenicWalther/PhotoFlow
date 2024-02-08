@@ -4,9 +4,10 @@
 	import moment from 'moment';
 	import type { PageData } from '../../routes/$types';
 
-	let completionDate = new Date();
-	let taskName: String, taskDescription: String;
+	export let completionDate = new Date();
+	export let taskName: String, taskDescription: String;
 	export let column_id;
+	export let buttonText: String = '+ Aufgabe hinzufügen';
 
 	const dispatch = createEventDispatcher();
 
@@ -88,7 +89,7 @@
 						<button
 							type="submit"
 							class="rounded-lg border-[1px] border-blue-600 bg-blue-600 px-7 py-[.625rem] text-sm font-semibold text-white transition-colors hover:bg-blue-700"
-							>+ Aufgabe hinzufügen</button
+							>{buttonText}</button
 						>
 						<button
 							type="button"
