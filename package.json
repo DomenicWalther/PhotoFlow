@@ -22,7 +22,7 @@
 		"postcss-load-config": "^4.0.1",
 		"prettier": "^2.7.1",
 		"prettier-plugin-tailwindcss": "^0.1.13",
-		"prisma": "^4.10.1",
+		"prisma": "^5.9.1",
 		"sass": "^1.55.0",
 		"stwui": "^0.0.31-next",
 		"svelte": "^3.52.0",
@@ -32,7 +32,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@prisma/client": "^4.10.1",
+		"@prisma/client": "^5.9.1",
 		"moment": "^2.29.4",
 		"qrcode": "^1.5.1",
 		"socket.io": "^4.6.1",
