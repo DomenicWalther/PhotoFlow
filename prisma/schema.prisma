@@ -28,6 +28,7 @@ model Tasks {
   is_finished            Boolean         @default(false)
   task_comments          task_comments[]
   amount_of_comments     Int             @default(0)
+  taskColumn            String   @default("1")
 }
 
 model KanbanCard {

@@ -49,9 +49,10 @@
 				{#each cards as card}
 					<div use:draggable={card.id}>
 						<Card
-							taskHeading={card.taskName}
-							taskDescription={card.taskDescription}
+							taskHeading={card.task}
+							taskDescription={card.additional_information}
 							taskTimeLeft={card.timeleft}
+							taskStatus={card.status}
 						/>
 					</div>
 				{/each}

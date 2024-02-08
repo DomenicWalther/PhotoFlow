@@ -5,18 +5,18 @@ import prisma from '$lib/server/prisma';
 export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const { card } = await request.json();
-		const { id, created_at, completion_Date, taskName, taskDescription, taskColumn } = card;
+		const { id, created_at, dueAt, task, additional_information, taskColumn } = card;
 
-		await prisma.kanbanCard.update({
+		await prisma.tasks.update({
 			where: {
 				id: id
 			},
 			data: {
 				id,
 				created_at,
-				completion_Date,
-				taskName,
-				taskDescription,
+				dueAt,
+				task,
+				additional_information,
 				taskColumn
 			}
 		});

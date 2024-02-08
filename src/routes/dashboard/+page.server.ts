@@ -3,7 +3,7 @@ import prisma from '$lib/server/prisma';
 
 export const load: PageServerLoad = async (event) => {
 	try {
-		const kanbanCards = await prisma.kanbanCard.findMany();
+		const kanbanCards = await prisma.tasks.findMany();
 
 		return {
 			kanban: kanbanCards,

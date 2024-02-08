@@ -224,7 +224,7 @@
 		</Modal>
 	{/if}
 	{#if $tasks !== undefined}
-		<table class="max-w-full">
+		<table class="mb-24 max-w-full">
 			<thead>
 				<tr class="text-left">
 					<th on:click={() => sortTasks('name', false, (a) => a.toUpperCase())}

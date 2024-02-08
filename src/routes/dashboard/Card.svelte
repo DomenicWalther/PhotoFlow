@@ -2,13 +2,30 @@
 	export let taskHeading: String;
 	export let taskDescription: String;
 	export let taskTimeLeft: String | undefined = undefined;
+	export let taskStatus: String;
 </script>
 
-<div class="mt-5 min-w-fit rounded-md bg-white px-10 py-6 shadow-sm">
-	<h4 class="pb-5 text-gray-800">{taskHeading}</h4>
-	<p class="text-sm text-gray-700">
-		{taskDescription}
-	</p>
+<div class="mt-3 min-w-fit rounded-md bg-white px-10 py-5 shadow-sm">
+	<h4 class=" text-gray-800">{taskHeading}</h4>
+	<div class="flex items-center justify-between">
+		<p class="text-sm text-gray-700">
+			{taskDescription}
+		</p>
+		<h1
+			class="mr-5 {taskStatus === 'NichtBearbeitet'
+				? 'text-gray-700'
+				: taskStatus === 'Entwickelt'
+				? 'text-red-700'
+				: taskStatus === 'Retuschiert'
+				? 'text-yellow-500'
+				: taskStatus === 'Gedruckt'
+				? 'text-green-600'
+				: ''}"
+		>
+			&#x2022
+		</h1>
+	</div>
+
 	{#if taskTimeLeft !== undefined}
 		<div class="mt-4 flex w-full flex-row-reverse">
 			<div
