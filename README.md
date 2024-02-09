@@ -1,38 +1,67 @@
-# create-svelte
+# PhotoFlow
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+PhotoFlow is a SvelteKit web application designed for organizing photography orders and clients, complete with an integrated Kanban board feature. Whether you're a professional photographer managing multiple clients or an amateur enthusiast looking to streamline your workflow, PhotoFlow provides an intuitive solution for keeping track of your photography projects.
 
-## Creating a project
+## Installation
 
-If you're seeing this, you've probably already done this step. Congrats!
+Before getting started with PhotoFlow, ensure that you have Node.js installed on your system. You can download and install Node.js from [here](https://nodejs.org/).
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+To install PhotoFlow, follow these steps:
 
-# create a new project in my-app
-npm create svelte@latest my-app
+1. Clone the GitHub repository to your local machine:
+
+```
+git clone https://github.com/DomenicWalther/PhotoFlow.git
 ```
 
-## Developing
+2. Navigate to the project directory:
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```
+cd PhotoFlow
 ```
 
-## Building
+3. Install dependencies using npm:
 
-To create a production version of your app:
+```
+npm install
+```
 
-```bash
+4. Build the application:
+
+```
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
+## Usage
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+Once the installation process is complete, you can start using PhotoFlow by following these steps:
+
+1. Start the application using the following command:
+
+```
+npm run preview -- --host
+```
+
+2. Open your web browser and navigate to the provided URL (usually `http://localhost:4173`) to access PhotoFlow.
+
+3. Begin by creating a new project or importing existing client data to start organizing your photography orders.
+
+4. Utilize the Kanban board feature to visualize the progress of your projects and efficiently manage tasks.
+
+## Features
+
+- **Client Management:** Easily manage client information, including contact details, project preferences, and order history.
+- **Order Tracking:** Keep track of photography orders, including details such as shoot dates, payment status, and delivery deadlines.
+- **Kanban Board:** Visualize project progress using a Kanban-style board, allowing for seamless task management and workflow optimization.
+
+## Contributing
+
+I welcome contributions from the community to enhance PhotoFlow further. If you have any ideas for new features, improvements, or bug fixes, please feel free to submit a pull request or open an issue on GitHub.
+
+## License
+
+PhotoFlow is licensed under the [MIT License](LICENSE).
+
+## Contact
+
+If you have any questions, suggestions, or feedback regarding PhotoFlow, please don't hesitate to contact me at [domenic.walther@gmx.de](mailto:domenic.walther@gmx.de). I'd love to hear from you!
