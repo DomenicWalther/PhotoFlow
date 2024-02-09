@@ -14,7 +14,16 @@ To install PhotoFlow, follow these steps:
 git clone https://github.com/DomenicWalther/PhotoFlow.git
 ```
 
-2. Navigate to the project directory:
+### Download ZIP Archive (Alternative Method)
+
+Alternatively, you can download the project as a ZIP archive from the GitHub repository page. Follow these steps:
+
+1. Visit the [PhotoFlow GitHub repository](https://github.com/DomenicWalther/photoflow).
+2. Click on the green "Code" button.
+3. Select "Download ZIP" from the dropdown menu.
+4. Once the ZIP file is downloaded, extract its contents to your desired location on your local machine.
+
+5. Navigate to the project directory:
 
 ```
 cd PhotoFlow
