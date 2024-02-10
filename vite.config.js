@@ -1,8 +1,5 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { Server } from 'socket.io';
-import getLocalIP from './src/lib/utils/getLocalIP';
-
-const ORIGIN = getLocalIP() + ':5173';
 
 const config = {
 	plugins: [
@@ -12,7 +9,7 @@ const config = {
 			configureServer(server) {
 				const io = new Server(3000, {
 					cors: {
-						origin: ORIGIN,
+						origin: 'http://192.168.178.24:5173',
 						methods: ['GET', 'POST']
 					}
 				});
