@@ -4,6 +4,7 @@ let prisma: PrismaClient;
 
 prisma = new PrismaClient();
 
+// Prints the time it takes to run a query to the Terminal
 prisma.$use(async (params, next) => {
 	const before = Date.now();
 
