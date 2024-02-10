@@ -1,5 +1,6 @@
 import ioClient from 'socket.io-client';
-const ENDPOINT = 'http://192.168.178.24:3000';
+import getLocalIP from './utils/getLocalIP';
+const ENDPOINT = getLocalIP() + ':3000';
 
 const socket = ioClient(ENDPOINT);
 
