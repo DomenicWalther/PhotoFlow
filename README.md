@@ -35,7 +35,13 @@ cd PhotoFlow
 npm install
 ```
 
-4. Build the application:
+4. Create the Database using prisma:
+
+```
+prisma migrate dev --name init
+```
+
+5. Build the application:
 
 ```
 npm run build
