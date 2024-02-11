@@ -8,6 +8,7 @@
 	export let taskName: String, taskDescription: String;
 	export let column_id;
 	export let buttonText: String = '+ Aufgabe hinzufügen';
+	export let status: String;
 
 	const dispatch = createEventDispatcher();
 
@@ -83,6 +84,19 @@
 							bind:value={completionDate}
 							class="mt-3 rounded-lg border-gray-200 bg-gray-50"
 						/>
+						<select
+							name="status"
+							id="status"
+							bind:value={status}
+							class="mt-3 rounded-lg border-gray-200 bg-gray-50"
+						>
+							<option class="border-gray-200 bg-gray-50" value="NichtBearbeitet"
+								>Nicht Bearbeitet</option
+							>
+							<option class="border-gray-200 bg-gray-50" value="Entwickelt">Entwickelt</option>
+							<option class="border-gray-200 bg-gray-50" value="Retuschiert">Retuschiert</option>
+							<option class="border-gray-200 bg-gray-50" value="Gedruckt">Gedruckt</option></select
+						>
 					</div>
 					<hr class="mt-5 mb-3 w-full" />
 					<div>

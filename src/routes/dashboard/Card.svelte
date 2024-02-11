@@ -3,9 +3,14 @@
 	export let taskDescription: String;
 	export let taskTimeLeft: String | undefined = undefined;
 	export let taskStatus: String;
+	export let updateCard: () => void;
 </script>
 
-<div class="mt-3 min-w-fit rounded-md bg-white px-10 py-5 shadow-sm">
+<div
+	class="mt-3 min-w-fit rounded-md bg-white px-10 py-5 shadow-sm"
+	on:click={updateCard}
+	on:keydown={updateCard}
+>
 	<h4 class=" text-gray-800">{taskHeading}</h4>
 	<div class="flex items-center justify-between">
 		<p class="text-sm text-gray-700">
