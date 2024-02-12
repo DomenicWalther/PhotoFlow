@@ -118,7 +118,6 @@
 	></a
 >
 <div class="my-0 mx-auto flex w-10/12 flex-col justify-center pt-10">
-	<!-- <div class="my-3"><HackerHeading text="Aufträge" /></div> -->
 	<div class="mb-5 mt-0">
 		Abgeschlossene Aufträge anzeigen
 		<input type="checkbox" bind:checked={$showFinishedTasks} class="cursor-pointer" />
