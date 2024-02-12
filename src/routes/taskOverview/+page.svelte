@@ -1,16 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { tasks, tasksSearchTerm, tasksFiltered, showFinishedTasks } from '$lib/Stores/TaskStore';
-	import moment from 'moment';
-	import { sort_by } from '$lib/utils/generalHelpers';
+	import { sort_by, updateCreateTask } from '$lib/utils/generalHelpers';
 	import { Card, Modal } from 'stwui';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { io } from '$lib/realtime';
 	import { getAndCreateTasks } from '$lib/utils/tasks';
 	import TaskModal from '$lib/components/TaskModal.svelte';
-
-	import NewTask from '$lib/NewTask.svelte';
-	import UpdateTask from '$lib/UpdateTask.svelte';
 	import TaskRow from './TaskRow.svelte';
 
 	let openModal = false;
@@ -95,29 +91,11 @@
 		});
 	}
 
-	async function updateTask(updateID, updateStatus, updateName, updateDueAt, updateExtras) {
-		fetch('/api/updateUserTask', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				id: updateID,
-				status: updateStatus,
-				task: updateName,
-				dueAt: moment(updateDueAt).format('YYYY-MM-DD'),
-				additional_information: updateExtras
-			})
-		}).then((response) => {
-			response.json;
-			toast.success('Auftrag erfolgreich geändert!');
-			io.emit('database-change');
-			getAndCreateTasks();
-		});
-	}
-
 	function updateTaskFromModal(event) {
 		let id, name, dueAt, extra, status;
 		[id, name, dueAt, extra, status] = event.detail.values;
-		updateTask(id, status, name, dueAt, extra);
+		updateCreateTask(id, status, name, dueAt, extra);
+		toast.success('Auftrag aktualisiert!');
 	}
 
 	function toggleDeleteConfirmation() {
@@ -165,11 +143,13 @@
 		<TaskModal on:toggleModal={toggleNewTask} />
 	{/if}
 	{#if isUpdateTaskOpen}
-		<UpdateTask
-			on:toggle={closeUpdateTask}
-			on:taskUpdate={updateTaskFromModal}
-			updateValues={UpdateTaskValues}
-			on:createToast={() => toast.success('Auftrag erfolgreich bearbeitet!')}
+		<TaskModal
+			completionDate={UpdateTaskValues[2]}
+			taskName="{UpdateTaskValues[1]},"
+			taskDescription="{UpdateTaskValues[3]},"
+			status={UpdateTaskValues[4]}
+			taskID={UpdateTaskValues[0]}
+			on:toggleModal={closeUpdateTask}
 		/>
 	{/if}
 	{#if isDeleteConfirmationOpen}

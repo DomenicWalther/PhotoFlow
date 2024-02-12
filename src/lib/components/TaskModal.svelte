@@ -4,12 +4,14 @@
 	import moment from 'moment';
 	import type { PageData } from '../../routes/$types';
 	import { getAndCreateTasks } from '$lib/utils/tasks';
+	import { updateCreateTask } from '$lib/utils/generalHelpers';
 
 	export let completionDate = new Date();
 	export let taskName: String, taskDescription: String;
 	export let column_id: number;
 	export let buttonText: String = '+ Aufgabe hinzufügen';
 	export let status: String;
+	export let taskID: number = null;
 
 	const dispatch = createEventDispatcher();
 
@@ -18,20 +20,7 @@
 	}
 
 	const submitForm = async (event) => {
-		fetch('/api/createNewTask', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				dueAt: moment(completionDate).format('YYYY-MM-DD'),
-				task: taskName,
-				additional_information: taskDescription,
-				taskColumn: column_id,
-				status: status
-			})
-		}).then((response) => {
-			response.json();
-			console.log(response);
-		});
+		updateCreateTask(taskID, status, taskName, completionDate, taskDescription);
 		toggleModal();
 		getAndCreateTasks();
 

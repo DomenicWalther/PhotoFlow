@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 /**
  * Returns a custom comparison function for sorting an array of objects by a specified field.
  * @param {string} field - The field by which to sort the array of objects.
@@ -26,3 +28,19 @@ export const sort_by = (field, reverse: Boolean | Number, primer: Function) => {
 		return (a = key(a)), (b = key(b)), reverse * ((a > b) - (b > a));
 	};
 };
+
+export async function updateCreateTask(taskID, taskStatus, taskName, taskDueAt, taskDescription) {
+	const response = await fetch('/api/createNewTask', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			taskID,
+			dueAt: moment(taskDueAt).format('YYYY-MM-DD'),
+			task: taskName,
+			additional_information: taskDescription,
+			status: taskStatus
+		})
+	});
+
+	return response.json();
+}
