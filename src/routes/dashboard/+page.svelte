@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Card from './Card.svelte';
 	import { dropzone, draggable } from '$lib/utils/dnd';
-	import NewKanbanCard from '$lib/components/NewKanbanCard.svelte';
+	import TaskModal from '$lib/components/TaskModal.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -82,11 +82,11 @@
 	</div>
 
 	{#if isNewKanbanCardModalOpen}
-		<NewKanbanCard on:toggleModal={toggleNewKanbanCardModal} column_id={NewKanbanCardColumn} />
+		<TaskModal on:toggleModal={toggleNewKanbanCardModal} column_id={NewKanbanCardColumn} />
 	{/if}
 
 	{#if isUpdateKanbanCardModalOpen}
-		<NewKanbanCard
+		<TaskModal
 			on:toggleModal={toggleUpdateKanbanCardModal}
 			column_id={NewKanbanCardColumn}
 			taskName={updateKanbanTaskName}

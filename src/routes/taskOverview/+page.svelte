@@ -6,6 +6,8 @@
 	import { Card, Modal } from 'stwui';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { io } from '$lib/realtime';
+	import { getAndCreateTasks } from '$lib/utils/tasks';
+	import TaskModal from '$lib/components/TaskModal.svelte';
 
 	import NewTask from '$lib/NewTask.svelte';
 	import UpdateTask from '$lib/UpdateTask.svelte';
@@ -18,7 +20,6 @@
 	let sortSelected = 'dueAt';
 	let sortOnce = true;
 	let searchQuery = '';
-	let user_id: String;
 	let idToDelete: Number | null;
 
 	$: tasksSearchTerm.set(searchQuery);
@@ -44,37 +45,6 @@
 		isUpdateTaskOpen = false;
 	}
 
-	async function getCurrentTasks() {
-		const response = await fetch('/api/getUserTasks', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				user_id
-			})
-		});
-		const result = await response.json();
-		return result;
-	}
-
-	function createTasks(data) {
-		if (data !== 'Not found') {
-			$tasks = data.map((i) => {
-				return {
-					name: i.task,
-					dueAt: new Date(i.dueAt.replace(' ', 'T')),
-					additional_information: i.additional_information,
-					status: i.status,
-					id: i.id,
-					is_finished: i.is_finished,
-					amount_of_comments: i.amount_of_comments
-				};
-			});
-		} else {
-			$tasks = [];
-		}
-		$tasks = $tasks.sort(sort_by('dueAt', false));
-	}
-
 	function sortTasks(field, reverse: Boolean, primer) {
 		if (sortSelected === field) {
 			if (sortOnce) {
@@ -86,9 +56,6 @@
 		}
 		$tasks = $tasks.sort(sort_by(field, reverse, primer));
 		sortSelected = field;
-	}
-	async function getAndCreateTasks() {
-		createTasks(await getCurrentTasks());
 	}
 
 	async function deleteTask() {
@@ -195,11 +162,7 @@
 	</div>
 
 	{#if openModal}
-		<NewTask
-			on:toggle={toggleNewTask}
-			on:fetchTasks={getAndCreateTasks}
-			on:createToast={() => toast.success('Auftrag erfolgreich erstellt!')}
-		/>
+		<TaskModal on:toggleModal={toggleNewTask} />
 	{/if}
 	{#if isUpdateTaskOpen}
 		<UpdateTask
