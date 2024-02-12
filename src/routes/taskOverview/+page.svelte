@@ -37,6 +37,14 @@
 		UpdateTaskValues = [task.id, task.name, task.dueAt, task.additional_information, task.status];
 	}
 
+	// I don't think this fuction name represent what it does, should be changed in the future
+	function updateTaskFromModal(event) {
+		let id, name, dueAt, extra, status;
+		[id, name, dueAt, extra, status] = event.detail.values;
+		updateCreateTask(id, status, name, dueAt, extra);
+		toast.success('Auftrag aktualisiert!');
+	}
+
 	function closeUpdateTask() {
 		isUpdateTaskOpen = false;
 	}
@@ -89,13 +97,6 @@
 			response.json();
 			io.emit('database-change');
 		});
-	}
-
-	function updateTaskFromModal(event) {
-		let id, name, dueAt, extra, status;
-		[id, name, dueAt, extra, status] = event.detail.values;
-		updateCreateTask(id, status, name, dueAt, extra);
-		toast.success('Auftrag aktualisiert!');
 	}
 
 	function toggleDeleteConfirmation() {
