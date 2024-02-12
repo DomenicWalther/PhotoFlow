@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Card, Modal } from 'stwui';
 	import { createEventDispatcher } from 'svelte';
-	import moment from 'moment';
 	import type { PageData } from '../../routes/$types';
 	import { getAndCreateTasks } from '$lib/utils/tasks';
 	import { updateCreateTask } from '$lib/utils/generalHelpers';
