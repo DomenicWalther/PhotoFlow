@@ -9,6 +9,7 @@ interface Tasks {
 	id: number;
 	is_finished: boolean;
 	amount_of_comments: number;
+	taskColumn: number;
 }
 
 // -- Current Task Variables
