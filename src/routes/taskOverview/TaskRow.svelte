@@ -16,28 +16,29 @@
 	let isAdditionalOptionsVisible = false;
 
 	function deleteTask() {
+		isAdditionalOptionsVisible = false;
 		dispatch('deleteTask', {
 			id: task.id
 		});
-		isAdditionalOptionsVisible = false;
 	}
 
 	function finishTask() {
+		isAdditionalOptionsVisible = false;
 		dispatch('finishTask', {
 			id: task.id
 		});
-		isAdditionalOptionsVisible = false;
 		makeFallingConfetti();
 	}
 
 	function updateTask() {
+		isAdditionalOptionsVisible = false;
 		dispatch('updateTask', {
 			values: [task.id, task.name, task.dueAt, task.additional_information, task.status]
 		});
-		isAdditionalOptionsVisible = false;
 	}
 
 	function openUpdateTask() {
+		isAdditionalOptionsVisible = false;
 		dispatch('openUpdateTask', {
 			task: task
 		});
