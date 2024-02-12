@@ -3,6 +3,7 @@
 	import { dropzone, draggable } from '$lib/utils/dnd';
 	import TaskModal from '$lib/components/TaskModal.svelte';
 	import type { PageData } from './$types';
+	import { updateCreateTask } from '$lib/utils/generalHelpers';
 
 	export let data: PageData;
 
@@ -23,14 +24,8 @@
 		updateKanbanTaskName = taskName;
 	};
 	const updateKanbanDatabase = (card) => {
-		console.log(card);
-		fetch('/api/updateCard', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ card })
-		}).then((response) => {
-			response.json;
-		});
+		const { id, dueAt, task, additional_information, taskColumn, status } = card;
+		updateCreateTask(id, status, task, dueAt, additional_information, taskColumn);
 	};
 </script>
 

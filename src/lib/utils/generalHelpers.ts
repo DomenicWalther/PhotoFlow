@@ -29,7 +29,14 @@ export const sort_by = (field, reverse: Boolean | Number, primer: Function) => {
 	};
 };
 
-export async function updateCreateTask(taskID, taskStatus, taskName, taskDueAt, taskDescription) {
+export async function updateCreateTask(
+	taskID,
+	taskStatus,
+	taskName,
+	taskDueAt,
+	taskDescription,
+	taskColumn
+) {
 	const response = await fetch('/api/createNewTask', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
@@ -38,7 +45,8 @@ export async function updateCreateTask(taskID, taskStatus, taskName, taskDueAt, 
 			dueAt: moment(taskDueAt).format('YYYY-MM-DD'),
 			task: taskName,
 			additional_information: taskDescription,
-			status: taskStatus
+			status: taskStatus,
+			taskColumn
 		})
 	});
 
