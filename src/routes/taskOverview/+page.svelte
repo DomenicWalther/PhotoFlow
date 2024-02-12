@@ -8,6 +8,7 @@
 	import { getAndCreateTasks } from '$lib/utils/tasks';
 	import TaskModal from '$lib/components/TaskModal.svelte';
 	import TaskRow from './TaskRow.svelte';
+	import UploadCsv from '$lib/components/UploadCSV.svelte';
 
 	let openModal = false;
 	let isUpdateTaskOpen = false;
@@ -79,6 +80,20 @@
 		});
 	}
 
+	async function importDatabase(file) {
+		fetch('/api/importcsv', {
+			method: 'Post',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				file
+			})
+		}).then((response) => {
+			toast.success('Aufträge importiert!');
+			getAndCreateTasks();
+			io.emit('database-change');
+		});
+	}
+
 	function toggleDeletion(event) {
 		idToDelete = event.detail.id;
 		toggleDeleteConfirmation();
@@ -143,10 +158,13 @@
 	}
 </script>
 
+<UploadCsv onUpload={(file) => importDatabase(file)} />
+
 <Toaster />
 <button on:click={() => downloadBlob(getData(), 'export.csv', 'text/csv;charset=utf-8')}>
 	EXPORT
 </button>
+
 <button
 	on:click={toggleNewTask}
 	type="button"
