@@ -35,6 +35,7 @@ export async function updateCreateTask(
 	taskName,
 	taskDueAt,
 	taskDescription,
+	taskIsFinished,
 	taskColumn
 ) {
 	const response = await fetch('/api/createNewTask', {
@@ -46,6 +47,7 @@ export async function updateCreateTask(
 			task: taskName,
 			additional_information: taskDescription,
 			status: taskStatus,
+			is_finished: taskIsFinished,
 			taskColumn
 		})
 	});

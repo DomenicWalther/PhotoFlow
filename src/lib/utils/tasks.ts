@@ -8,7 +8,6 @@ async function getAndCreateTasks() {
 
 function createTasks(data) {
 	let tasksValue = get(tasks);
-	console.log('Running createTasks');
 	if (data !== 'Not found') {
 		tasksValue = data.map((i) => {
 			return {
@@ -18,7 +17,8 @@ function createTasks(data) {
 				status: i.status,
 				id: i.id,
 				is_finished: i.is_finished,
-				amount_of_comments: i.amount_of_comments
+				amount_of_comments: i.amount_of_comments,
+				taskColumn: i.taskColumn
 			};
 		});
 	} else {

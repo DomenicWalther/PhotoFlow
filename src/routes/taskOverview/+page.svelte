@@ -102,9 +102,51 @@
 	function toggleDeleteConfirmation() {
 		isDeleteConfirmationOpen = !isDeleteConfirmationOpen;
 	}
+
+	function arrayToCsv(data) {
+		return data
+			.map((row) =>
+				row
+					.map(String)
+					.map((v) => v.replaceAll('"', '""'))
+					.map((v) => `"${v}"`)
+					.join(',')
+			)
+			.join('\r\n');
+	}
+
+	function getData() {
+		return arrayToCsv([
+			['ID', 'task', 'dueAt', 'status', 'additional_information', 'is_finished', 'taskColumn'],
+			...$tasks.map((task) => [
+				task.id,
+				task.name,
+				task.dueAt,
+				task.status,
+				task.additional_information,
+				task.is_finished,
+				task.taskColumn
+			])
+		]);
+	}
+
+	function downloadBlob(content, filename, contentType) {
+		var blob = new Blob([content], { type: contentType });
+		var url = URL.createObjectURL(blob);
+
+		var a = document.createElement('a');
+		document.body.append(a);
+		a.href = url;
+		a.setAttribute('download', filename);
+		a.click();
+		a.remove();
+	}
 </script>
 
 <Toaster />
+<button on:click={() => downloadBlob(getData(), 'export.csv', 'text/csv;charset=utf-8')}>
+	EXPORT
+</button>
 <button
 	on:click={toggleNewTask}
 	type="button"
