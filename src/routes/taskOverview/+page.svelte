@@ -13,6 +13,7 @@
 	let openModal = false;
 	let isUpdateTaskOpen = false;
 	let isDeleteConfirmationOpen = false;
+	let isSettingsModalOpen = false;
 	let UpdateTaskValues: Array<String | Number | Date> = [];
 	let sortSelected = 'dueAt';
 	let sortOnce = true;
@@ -30,6 +31,10 @@
 
 	function toggleNewTask() {
 		openModal = !openModal;
+	}
+
+	function toggleSettingsModal() {
+		isSettingsModalOpen = !isSettingsModalOpen;
 	}
 
 	function openUpdateTask(event) {
@@ -156,6 +161,9 @@
 		a.click();
 		a.remove();
 	}
+	function toggleSettings() {
+		toggleSettingsModal();
+	}
 </script>
 
 <UploadCsv onUpload={(file) => importDatabase(file)} />
@@ -165,6 +173,12 @@
 	EXPORT
 </button>
 
+<button
+	on:click={toggleSettings}
+	type="button"
+	class="fixed bottom-56 right-10 h-20 w-20 rounded-[50%] bg-blue-500 text-4xl text-white transition-all hover:scale-105 hover:bg-blue-500"
+	>S</button
+>
 <button
 	on:click={toggleNewTask}
 	type="button"
@@ -213,6 +227,27 @@
 		/>
 	{/if}
 	{#if isDeleteConfirmationOpen}
+		<Modal handleClose={toggleDeleteConfirmation}>
+			<Modal.Content slot="content">
+				<Card>
+					<Card.Header slot="header">Wirklich löschen?</Card.Header>
+					<Card.Content slot="content">
+						<p class="mb-4 text-base">
+							Der Auftrag "{$tasks.find((item) => item.id === idToDelete).name}" wird gelöscht!
+						</p>
+						<button
+							on:click={toggleDeleteConfirmation}
+							class="buttonstyle bg-blue-600 hover:bg-blue-500">Bitte abbrechen!</button
+						>
+						<button on:click={deleteTask} class="buttonstyle bg-red-700  hover:bg-red-600"
+							>Ja, wirklich löschen!</button
+						>
+					</Card.Content>
+				</Card>
+			</Modal.Content>
+		</Modal>
+	{/if}
+	{#if isSettingsModalOpen}
 		<Modal handleClose={toggleDeleteConfirmation}>
 			<Modal.Content slot="content">
 				<Card>
