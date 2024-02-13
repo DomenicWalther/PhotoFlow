@@ -166,12 +166,7 @@
 	}
 </script>
 
-<UploadCsv onUpload={(file) => importDatabase(file)} />
-
 <Toaster />
-<button on:click={() => downloadBlob(getData(), 'export.csv', 'text/csv;charset=utf-8')}>
-	EXPORT
-</button>
 
 <button
 	on:click={toggleSettings}
@@ -248,21 +243,22 @@
 		</Modal>
 	{/if}
 	{#if isSettingsModalOpen}
-		<Modal handleClose={toggleDeleteConfirmation}>
+		<Modal handleClose={toggleSettingsModal}>
 			<Modal.Content slot="content">
 				<Card>
-					<Card.Header slot="header">Wirklich löschen?</Card.Header>
+					<Card.Header slot="header">Einstellungen</Card.Header>
 					<Card.Content slot="content">
-						<p class="mb-4 text-base">
-							Der Auftrag "{$tasks.find((item) => item.id === idToDelete).name}" wird gelöscht!
-						</p>
-						<button
-							on:click={toggleDeleteConfirmation}
-							class="buttonstyle bg-blue-600 hover:bg-blue-500">Bitte abbrechen!</button
-						>
-						<button on:click={deleteTask} class="buttonstyle bg-red-700  hover:bg-red-600"
-							>Ja, wirklich löschen!</button
-						>
+						<div class="flex justify-between">
+							<UploadCsv onUpload={(file) => importDatabase(file)} />
+							<div>
+								<button
+									class="rounded-md bg-blue-500 px-4 py-2 text-white"
+									on:click={() => downloadBlob(getData(), 'export.csv', 'text/csv;charset=utf-8')}
+								>
+									Aufträge Exportieren
+								</button>
+							</div>
+						</div>
 					</Card.Content>
 				</Card>
 			</Modal.Content>
