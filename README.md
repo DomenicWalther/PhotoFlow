@@ -1,7 +1,18 @@
 # PhotoFlow
 
 PhotoFlow is a SvelteKit web application designed for organizing photography orders and clients, complete with an integrated Kanban board feature. Whether you're a professional photographer managing multiple clients or an amateur enthusiast looking to streamline your workflow, PhotoFlow provides an intuitive solution for keeping track of your photography projects.
+This Project first came to live to solve the following Problem I've had at work:
+- We were using Pen & Paper to keep track of all current orders in a list.
+- Since the way we handle orders is pretty dynamic and the order isn't fixed the list had to be rewritten a lot since orders got finished but some still had to be done
+- Solution: Keep track of all Orders digitally
+- Issues:
+    1. We don't have access to the Internet, but rather have an internal Network of connected PC's. Any existing solution needing Internet wouldn't work.
+    2. We were trying out using Excel Tables, but these couldn't be easily accessed/modified by multiple PC's in the Network at once.
+       As a small company with 4 Employees, all Tasks should be synced through the entire network.
 
+    My solution was using vite's host feature to allow the other PC's in the Network access the App.
+    The Server is running on one PC, all PC's can send Requests to get/write Data. Only the Server then gets/writes the Data from/to the Database, removing synchronization issues.
+    Socket.io is used to automatically refresh the other PC's data whenever there has been a change in the database.
 ## Installation
 
 Before getting started with PhotoFlow, ensure that you have Node.js installed on your system. You can download and install Node.js from [here](https://nodejs.org/).
