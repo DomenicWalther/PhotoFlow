@@ -13,6 +13,7 @@
 	};
 
 	export let task;
+    export let isUrgent;
 	let isAdditionalOptionsVisible = false;
 
 	function deleteTask() {
@@ -43,8 +44,6 @@
 			task: task
 		});
 	}
-
-    let isUrgent: bool = Math.floor((task.dueAt - Date.now()) / 86400000) < 1;
 
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 </script>
