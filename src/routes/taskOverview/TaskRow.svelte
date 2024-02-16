@@ -44,13 +44,15 @@
 		});
 	}
 
+    let isUrgent: bool = Math.floor((task.dueAt - Date.now()) / 86400000) < 1;
+
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 </script>
 
 {#if fallingConfetti}
 	<FallingConfetti particleCount={300} />
 {/if}
-<tr>
+<tr class="{isUrgent ? 'is-urgent' : ''}">
 	<td
 		><a href="/tasks/{task.id}">{task.name}</a>{#if task.amount_of_comments > 0}
 			<p class="whitespace-nowrap text-sm">
@@ -130,4 +132,7 @@
 			background-color: #e5e4e4;
 		}
 	}
+    .is-urgent {
+    color: red;
+        }
 </style>

@@ -30,12 +30,3 @@ model Tasks {
   amount_of_comments     Int             @default(0)
   taskColumn            String   @default("1")
 }
-
-model KanbanCard {
-  id Int @id @default(autoincrement())
-  created_at DateTime @default(now())
-  completion_Date DateTime
-  taskName String
-  taskDescription String
-  taskColumn String
-}

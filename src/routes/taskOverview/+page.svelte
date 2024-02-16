@@ -8,10 +8,13 @@
 	import { getAndCreateTasks } from '$lib/utils/tasks';
 	import TaskModal from '$lib/components/TaskModal.svelte';
 	import TaskRow from './TaskRow.svelte';
+	import UploadCsv from '$lib/components/UploadCSV.svelte';
+	import SettingsIcon from '$lib/components/SVG/SettingsIcon.svelte';
 
 	let openModal = false;
 	let isUpdateTaskOpen = false;
 	let isDeleteConfirmationOpen = false;
+	let isSettingsModalOpen = false;
 	let UpdateTaskValues: Array<String | Number | Date> = [];
 	let sortSelected = 'dueAt';
 	let sortOnce = true;
@@ -31,10 +34,22 @@
 		openModal = !openModal;
 	}
 
+	function toggleSettingsModal() {
+		isSettingsModalOpen = !isSettingsModalOpen;
+	}
+
 	function openUpdateTask(event) {
 		const task = event.detail.task;
 		isUpdateTaskOpen = true;
 		UpdateTaskValues = [task.id, task.name, task.dueAt, task.additional_information, task.status];
+	}
+
+	// I don't think this fuction name represent what it does, should be changed in the future
+	function updateTaskFromModal(event) {
+		let id, name, dueAt, extra, status;
+		[id, name, dueAt, extra, status] = event.detail.values;
+		updateCreateTask(id, status, name, dueAt, extra);
+		toast.success('Auftrag aktualisiert!');
 	}
 
 	function closeUpdateTask() {
@@ -71,6 +86,20 @@
 		});
 	}
 
+	async function importDatabase(file) {
+		fetch('/api/importcsv', {
+			method: 'Post',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				file
+			})
+		}).then((response) => {
+			toast.success('Aufträge importiert!');
+			getAndCreateTasks();
+			io.emit('database-change');
+		});
+	}
+
 	function toggleDeletion(event) {
 		idToDelete = event.detail.id;
 		toggleDeleteConfirmation();
@@ -91,19 +120,63 @@
 		});
 	}
 
-	function updateTaskFromModal(event) {
-		let id, name, dueAt, extra, status;
-		[id, name, dueAt, extra, status] = event.detail.values;
-		updateCreateTask(id, status, name, dueAt, extra);
-		toast.success('Auftrag aktualisiert!');
-	}
-
 	function toggleDeleteConfirmation() {
 		isDeleteConfirmationOpen = !isDeleteConfirmationOpen;
+	}
+
+	function arrayToCsv(data) {
+		return data
+			.map((row) =>
+				row
+					.map(String)
+					.map((v) => v.replaceAll('"', '""'))
+					.map((v) => `"${v}"`)
+					.join(',')
+			)
+			.join('\r\n');
+	}
+
+	function getData() {
+		return arrayToCsv([
+			['ID', 'task', 'dueAt', 'status', 'additional_information', 'is_finished', 'taskColumn'],
+			...$tasks.map((task) => [
+				task.id,
+				task.name,
+				task.dueAt,
+				task.status,
+				task.additional_information,
+				task.is_finished,
+				task.taskColumn
+			])
+		]);
+	}
+
+	function downloadBlob(content, filename, contentType) {
+		var blob = new Blob([content], { type: contentType });
+		var url = URL.createObjectURL(blob);
+
+		var a = document.createElement('a');
+		document.body.append(a);
+		a.href = url;
+		a.setAttribute('download', filename);
+		a.click();
+		a.remove();
+	}
+	function toggleSettings() {
+		toggleSettingsModal();
 	}
 </script>
 
 <Toaster />
+
+<button
+	on:click={toggleSettings}
+	type="button"
+	class="fixed bottom-56 right-10 h-20 w-20 rounded-[50%] bg-blue-500 text-4xl text-white transition-all hover:scale-105 hover:bg-blue-500"
+	><div class="mx-auto my-0 flex h-10 w-10 items-center justify-center">
+		<SettingsIcon />
+	</div></button
+>
 <button
 	on:click={toggleNewTask}
 	type="button"
@@ -167,6 +240,28 @@
 						<button on:click={deleteTask} class="buttonstyle bg-red-700  hover:bg-red-600"
 							>Ja, wirklich löschen!</button
 						>
+					</Card.Content>
+				</Card>
+			</Modal.Content>
+		</Modal>
+	{/if}
+	{#if isSettingsModalOpen}
+		<Modal handleClose={toggleSettingsModal}>
+			<Modal.Content slot="content">
+				<Card>
+					<Card.Header slot="header">Einstellungen</Card.Header>
+					<Card.Content slot="content">
+						<div class="flex justify-between">
+							<UploadCsv onUpload={(file) => importDatabase(file)} />
+							<div>
+								<button
+									class="rounded-md bg-blue-500 px-4 py-2 text-white"
+									on:click={() => downloadBlob(getData(), 'export.csv', 'text/csv;charset=utf-8')}
+								>
+									Aufträge Exportieren
+								</button>
+							</div>
+						</div>
 					</Card.Content>
 				</Card>
 			</Modal.Content>
