@@ -9,6 +9,7 @@
 	import TaskModal from '$lib/components/TaskModal.svelte';
 	import TaskRow from './TaskRow.svelte';
 	import UploadCsv from '$lib/components/UploadCSV.svelte';
+	import SettingsIcon from '$lib/components/SVG/SettingsIcon.svelte';
 
 	let openModal = false;
 	let isUpdateTaskOpen = false;
@@ -172,7 +173,9 @@
 	on:click={toggleSettings}
 	type="button"
 	class="fixed bottom-56 right-10 h-20 w-20 rounded-[50%] bg-blue-500 text-4xl text-white transition-all hover:scale-105 hover:bg-blue-500"
-	>S</button
+	><div class="mx-auto my-0 flex h-10 w-10 items-center justify-center">
+		<SettingsIcon />
+	</div></button
 >
 <button
 	on:click={toggleNewTask}

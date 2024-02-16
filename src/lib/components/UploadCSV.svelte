@@ -56,7 +56,9 @@
 	}
 </script>
 
-<div class="flex">
-	<label for="file" class="rounded-md bg-blue-500 px-4 py-2 text-white">Aufträge Importieren</label>
+<div class="flex cursor-pointer">
+	<label for="file" class="cursor-pointer rounded-md bg-blue-500 px-4 py-2 text-white"
+		>Aufträge Importieren</label
+	>
 	<input bind:this={uploader} on:change={uploadFile} type="file" class="z-200 hidden" id="file" />
 </div>
