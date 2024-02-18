@@ -21,6 +21,7 @@
 	let searchQuery = '';
 	let idToDelete: Number | null;
 
+	const ONEDAY = 86400000;
 	$: tasksSearchTerm.set(searchQuery);
 
 	onMount(async () => {
@@ -302,7 +303,7 @@
 				{#each $tasksFiltered as task}
 					<TaskRow
 						{task}
-                        isUrgent ={(Math.floor((task.dueAt - Date.now()) / 86400000) < 1)}
+						isUrgent={Math.floor((task.dueAt - Date.now()) / ONEDAY) < 1}
 						on:deleteTask={toggleDeletion}
 						on:finishTask={finishTask}
 						on:updateTask={updateTaskFromModal}
