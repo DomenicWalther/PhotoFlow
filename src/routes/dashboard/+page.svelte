@@ -1,4 +1,13 @@
 <script lang="ts">
+	interface KanbanCard {
+		id: number;
+		dueAt: Date;
+		task: string;
+		additional_information: string;
+		taskColumn: string;
+		status: string;
+	}
+
 	import Card from './Card.svelte';
 	import { dropzone, draggable } from '$lib/utils/dnd';
 	import TaskModal from '$lib/components/TaskModal.svelte';
@@ -13,17 +22,17 @@
 	let updateKanbanDescription = '';
 	let updateKanbanTaskName = '';
 
-	const toggleNewKanbanCardModal = (column_id) => {
+	const toggleNewKanbanCardModal = (column_id: string) => {
 		isNewKanbanCardModalOpen = !isNewKanbanCardModalOpen;
 		NewKanbanCardColumn = column_id;
 	};
 
-	const toggleUpdateKanbanCardModal = (taskName, taskDescription) => {
+	const toggleUpdateKanbanCardModal = (taskName: string, taskDescription: string) => {
 		isUpdateKanbanCardModalOpen = !isUpdateKanbanCardModalOpen;
 		updateKanbanDescription = taskDescription;
 		updateKanbanTaskName = taskName;
 	};
-	const updateKanbanDatabase = (card) => {
+	const updateKanbanDatabase = (card: KanbanCard) => {
 		const { id, dueAt, task, additional_information, taskColumn, status } = card;
 		updateCreateTask(id, status, task, dueAt, additional_information, taskColumn);
 	};

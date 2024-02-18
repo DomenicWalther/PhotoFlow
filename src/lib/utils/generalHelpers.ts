@@ -13,7 +13,7 @@ import moment from 'moment';
 
  */
 
-export const sort_by = (field, reverse: Boolean | Number, primer: Function) => {
+export const sort_by = (field: string, reverse: Boolean | Number, primer: Function) => {
 	const key = primer
 		? function (x) {
 				return primer(x[field]);
@@ -30,13 +30,13 @@ export const sort_by = (field, reverse: Boolean | Number, primer: Function) => {
 };
 
 export async function updateCreateTask(
-	taskID,
-	taskStatus,
-	taskName,
-	taskDueAt,
-	taskDescription,
-	taskIsFinished,
-	taskColumn
+	taskID: string,
+	taskStatus: string,
+	taskName: string,
+	taskDueAt: string,
+	taskDescription: string,
+	taskIsFinished: boolean,
+	taskColumn: string
 ) {
 	const response = await fetch('/api/createNewTask', {
 		method: 'POST',
