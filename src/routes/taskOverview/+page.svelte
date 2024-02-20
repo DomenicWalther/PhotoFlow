@@ -303,7 +303,8 @@
 				{#each $tasksFiltered as task}
 					<TaskRow
 						{task}
-						isUrgent={Math.floor((task.dueAt - Date.now()) / ONEDAY) < 1}
+						isUrgent={Math.floor((task.dueAt - Date.now()) / ONEDAY) < 1 &&
+							task.is_finished === false}
 						on:deleteTask={toggleDeletion}
 						on:finishTask={finishTask}
 						on:updateTask={updateTaskFromModal}

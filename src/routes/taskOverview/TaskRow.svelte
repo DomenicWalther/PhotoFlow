@@ -2,6 +2,7 @@
 	import AdditionalOptions from '$lib/components/AdditionalOptions.svelte';
 	import { createEventDispatcher, tick } from 'svelte';
 	import { FallingConfetti } from 'svelte-canvas-confetti';
+	import type { Task } from 'svelte/internal';
 
 	const dispatch = createEventDispatcher();
 	let fallingConfetti = false;
@@ -12,8 +13,8 @@
 		fallingConfetti = true;
 	};
 
-	export let task;
-    export let isUrgent;
+	export let task: Task;
+	export let isUrgent: boolean;
 	let isAdditionalOptionsVisible = false;
 
 	function deleteTask() {
@@ -51,7 +52,7 @@
 {#if fallingConfetti}
 	<FallingConfetti particleCount={300} />
 {/if}
-<tr class="{isUrgent ? 'is-urgent' : ''}">
+<tr class={isUrgent ? 'is-urgent' : ''}>
 	<td
 		><a href="/tasks/{task.id}">{task.name}</a>{#if task.amount_of_comments > 0}
 			<p class="whitespace-nowrap text-sm">
@@ -131,7 +132,7 @@
 			background-color: #e5e4e4;
 		}
 	}
-    .is-urgent {
-    color: red;
-        }
+	.is-urgent {
+		color: #d21f3c;
+	}
 </style>
