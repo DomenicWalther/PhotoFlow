@@ -3,15 +3,19 @@
 // and what to do when importing types
 
 declare namespace App {
-	// interface PageData {}
-	// interface Error {}
-	// interface Platform {}
+    // interface PageData {}
+    // interface Error {}
+    // interface Platform {}
 }
 
 interface Tasks {
-	name: String;
-	dueAt: String;
-	additional_information: String;
-	status: String;
-	id: String;
+    name: String;
+    dueAt: Date;
+    additional_information: String;
+    status: String;
+    id: Number;
+    created_at: Date;
+    status: String;
+    taskColumn: String;
+    amount_of_comments: Number;
 }

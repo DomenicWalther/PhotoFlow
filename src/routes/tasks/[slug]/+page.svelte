@@ -2,17 +2,13 @@
 	import TaskRow from './TaskRow.svelte';
 	import type { PageData } from './$types';
 	import { invalidateAll } from '$app/navigation';
-
+	import Comment from './Comment.svelte';
 	const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
 	export let data: PageData;
 	let comment: String;
-	let isEditingComment: Boolean = false;
-	let editingCommentId: String = '';
-	let editingCommentContent: String;
 
 	const submitComment = async () => {
-		console.log(data);
 		fetch('/api/addCommentToTask', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -23,45 +19,6 @@
 		}).then((response) => {
 			comment = '';
 			invalidateAll();
-		});
-	};
-
-	const deleteComment = (comment_id: String) => {
-		fetch('/api/deleteCommentFromTask', {
-			method: 'DELETE',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				comment_id: comment_id,
-				task_id: data.tasks?.id
-			})
-		}).then((response) => {
-			invalidateAll();
-		});
-	};
-
-	const editComment = (comment) => {
-		isEditingComment = true;
-		editingCommentId = comment.id;
-		editingCommentContent = comment.comment;
-	};
-
-	const editCommentReset = () => {
-		isEditingComment = false;
-		editingCommentId = '';
-		editingCommentContent = '';
-	};
-
-	const editCommentSave = () => {
-		fetch('/api/updateCommentFromTask', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				new_comment: editingCommentContent,
-				comment_id: editingCommentId
-			})
-		}).then((response) => {
-			invalidateAll();
-			editCommentReset();
 		});
 	};
 </script>
@@ -105,51 +62,7 @@
 			</div>
 			{#if data.comments}
 				{#each data.comments as comment}
-					<div class="sm:gapx-4 bg-gray-50 py-3 px-4 sm:grid sm:grid-cols-3 sm:px-6">
-						<dt class="text-sm font-medium text-gray-500">
-							{new Date(comment.created_at).toLocaleDateString('de-DE', dateOptions)}
-							{new Date(comment.created_at).toLocaleTimeString('de-DE', {
-								hour: '2-digit',
-								minute: '2-digit'
-							})}
-						</dt>
-						{#if editingCommentId !== comment.id}
-							<dd class="mt-1 px-20 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-								{comment.comment}
-							</dd>
-						{:else if isEditingComment && editingCommentId === comment.id}
-							<div>
-								<textarea
-									rows="2"
-									class="mt-1 w-full rounded sm:col-span-2 sm:mt-0"
-									bind:value={editingCommentContent}
-								/>
-								<div class="flex justify-start">
-									<button class="buttonstyle mx-2 sm:mt-0" on:click={editCommentSave}>Save</button>
-									<button class="buttonstyle mx-2 sm:mt-0" on:click={editCommentReset}
-										>Cancel</button
-									>
-								</div>
-							</div>
-						{/if}
-						{#if !isEditingComment}
-							<div class="flex">
-								<p
-									class="optiontext cursor-pointer underline"
-									on:click={() => editComment(comment)}
-								>
-									Bearbeiten
-								</p>
-								<p class="optiontext px-1">-</p>
-								<p
-									on:click={() => deleteComment(comment.id)}
-									class="optiontext cursor-pointer underline"
-								>
-									Löschen
-								</p>
-							</div>
-						{/if}
-					</div>
+					<Comment {comment} {data} />
 				{/each}
 			{/if}
 		</dl>
