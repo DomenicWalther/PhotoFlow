@@ -6,7 +6,7 @@ import moment from 'moment';
  * @param {boolean|number} reverse - Optional. Indicates whether to sort in reverse order. Defaults to false (ascending order).
  * @param {Function} primer - Optional. A function to transform each element's field value before comparison.
  * @returns {Function} - A comparison function to be used with the Array.prototype.sort() method.
- * 
+ *
  * The returned comparison function compares two objects from the array based on the specified field.
  * If a primer function is provided, it transforms the field values before comparison.
  * Sorting order (ascending/descending) is determined by the 'reverse' parameter.
@@ -14,43 +14,43 @@ import moment from 'moment';
  */
 
 export const sort_by = (field: string, reverse: Boolean | Number, primer: Function) => {
-	const key = primer
-		? function (x) {
-				return primer(x[field]);
-		  }
-		: function (x: Object) {
-				return x[field];
-		  };
+    const key = primer
+        ? function(x) {
+            return primer(x[field]);
+        }
+        : function(x: Object) {
+            return x[field];
+        };
 
-	reverse = !reverse ? 1 : -1;
+    reverse = !reverse ? 1 : -1;
 
-	return function (a, b) {
-		return (a = key(a)), (b = key(b)), reverse * ((a > b) - (b > a));
-	};
+    return function(a, b) {
+        return (a = key(a)), (b = key(b)), reverse * ((a > b) - (b > a));
+    };
 };
 
 export async function updateCreateTask(
-	taskID: string,
-	taskStatus: string,
-	taskName: string,
-	taskDueAt: string,
-	taskDescription: string,
-	taskIsFinished: boolean,
-	taskColumn: string
+    taskID: string,
+    taskStatus: string,
+    taskName: string,
+    taskDueAt: string,
+    taskDescription: string,
+    taskIsFinished: boolean,
+    taskColumn: string
 ) {
-	const response = await fetch('/api/createNewTask', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({
-			taskID,
-			dueAt: moment(taskDueAt).format('YYYY-MM-DD'),
-			task: taskName,
-			additional_information: taskDescription,
-			status: taskStatus,
-			is_finished: taskIsFinished,
-			taskColumn
-		})
-	});
+    const response = await fetch('/api/createNewTask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            taskID,
+            dueAt: moment(taskDueAt).format('YYYY-MM-DD'),
+            task: taskName,
+            additional_information: taskDescription,
+            status: taskStatus,
+            is_finished: taskIsFinished,
+            taskColumn
+        })
+    });
 
-	return response.json();
+    return response.json();
 }
