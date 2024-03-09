@@ -25,7 +25,7 @@
 		{#if !option.disabled}
 			<li>
 				<button
-					class="flex w-full gap-x-2 p-4 text-base font-bold transition-all hover:text-blue-500"
+					class="flex w-full text-black gap-x-2 p-4 text-base font-bold transition-all hover:text-blue-500"
 					on:click={option.onClick}
 				>
 					{#if option.icon}
