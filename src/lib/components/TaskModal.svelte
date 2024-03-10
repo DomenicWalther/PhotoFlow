@@ -10,7 +10,7 @@
 	export let column_id: number;
 	export let buttonText: String = '+ Aufgabe hinzufügen';
 	export let status: String;
-	export let taskID: number = null;
+	export let taskID: number | null = null;
 
 	const dispatch = createEventDispatcher();
 
@@ -19,13 +19,14 @@
 	}
 
 	const submitForm = async (event) => {
-		updateCreateTask(taskID, status, taskName, completionDate, taskDescription);
+		await updateCreateTask(taskID, status, taskName, completionDate, taskDescription);
 		toggleModal();
 		getAndCreateTasks();
 
 		event.target.reset();
 		taskName = '';
 		taskDescription = '';
+    taskID = null;
 		completionDate = new Date();
 	};
 </script>
