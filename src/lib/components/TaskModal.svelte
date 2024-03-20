@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { Card, Modal } from 'stwui';
 	import { createEventDispatcher } from 'svelte';
-	import type { PageData } from '../../routes/$types';
 	import { getAndCreateTasks } from '$lib/utils/tasks';
 	import { updateCreateTask } from '$lib/utils/generalHelpers';
 
 	export let completionDate = new Date();
-	export let taskName: String, taskDescription: String;
+	export let taskName: String, taskDescription: String = "";
 	export let column_id: number;
 	export let buttonText: String = '+ Aufgabe hinzufügen';
 	export let status: String;
@@ -29,6 +28,8 @@
     taskID = null;
 		completionDate = new Date();
 	};
+
+
 </script>
 
 <Modal handleClose={toggleModal}>
@@ -52,7 +53,6 @@
 							id="taskName"
 							placeholder="Redesign Homepage"
 							class="mt-3 w-full rounded-lg border-gray-200 bg-gray-50 text-sm text-gray-600 placeholder:text-gray-400 focus:border-2 focus:border-blue-600"
-							autofocus
 							bind:value={taskName}
 						/>
 					</div>
