@@ -10,6 +10,7 @@
 	import TaskRow from './TaskRow.svelte';
 	import UploadCsv from '$lib/components/UploadCSV.svelte';
 	import SettingsIcon from '$lib/components/SVG/SettingsIcon.svelte';
+	import CalendarView from './CalendarView.svelte';
 
 	let openModal = false;
 	let isUpdateTaskOpen = false;
@@ -20,6 +21,7 @@
 	let sortOnce = true;
 	let searchQuery = '';
 	let idToDelete: Number | null;
+	let viewMode: 'table' | 'calendar' = 'table';
 
 	const ONEDAY = 86400000;
 	$: tasksSearchTerm.set(searchQuery);
@@ -212,6 +214,27 @@
 		>
 	</div>
 
+	<div class="mb-4 flex justify-end space-x-2">
+		<button
+			class="rounded px-4 py-2 {viewMode === 'table' ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
+			on:click={() => viewMode = 'table'}
+		>
+			<svg class="h-5 w-5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M3 18h18M3 6h18"/>
+			</svg>
+			Tabelle
+		</button>
+		<button
+			class="rounded px-4 py-2 {viewMode === 'calendar' ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
+			on:click={() => viewMode = 'calendar'}
+		>
+			<svg class="h-5 w-5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+			</svg>
+			Kalender
+		</button>
+	</div>
+
 	{#if openModal}
 		<TaskModal on:toggleModal={toggleNewTask} />
 	{/if}
@@ -269,50 +292,57 @@
 		</Modal>
 	{/if}
 	{#if $tasks !== undefined}
-		<table class="mb-24 max-w-full">
-			<thead>
-				<tr class="text-left">
-					<th on:click={() => sortTasks('name', false, (a) => a.toUpperCase())}
-						>Aufträge<i
-							class:caret-down={sortSelected === 'name' && sortOnce}
-							class:caret-up={sortSelected === 'name' && !sortOnce}
-						/></th
-					>
-					<th on:click={() => sortTasks('dueAt', false)}
-						>Datum<i
-							class:caret-down={sortSelected === 'dueAt' && sortOnce}
-							class:caret-up={sortSelected === 'dueAt' && !sortOnce}
-						/></th
-					>
-					<th on:click={() => sortTasks('status', false, (a) => a.toUpperCase())}
-						>Status<i
-							class:caret-down={sortSelected === 'status' && sortOnce}
-							class:caret-up={sortSelected === 'status' && !sortOnce}
-						/></th
-					>
-					<th on:click={() => sortTasks('additional_information', false, (a) => a.toUpperCase())}
-						>Zusätzliches<i
-							class:caret-down={sortSelected === 'additional_information' && sortOnce}
-							class:caret-up={sortSelected === 'additional_information' && !sortOnce}
-						/></th
-					>
-					<th>Optionen</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each $tasksFiltered as task}
-					<TaskRow
-						{task}
-						isUrgent={Math.floor((task.dueAt - Date.now()) / ONEDAY) < 1 &&
-							task.is_finished === false}
-						on:deleteTask={toggleDeletion}
-						on:finishTask={finishTask}
-						on:updateTask={updateTaskFromModal}
-						on:openUpdateTask={openUpdateTask}
-					/>
-				{/each}
-			</tbody>
-		</table>
+		{#if viewMode === 'table'}
+			<table class="mb-24 max-w-full">
+				<thead>
+					<tr class="text-left">
+						<th on:click={() => sortTasks('name', false, (a) => a.toUpperCase())}
+							>Aufträge<i
+								class:caret-down={sortSelected === 'name' && sortOnce}
+								class:caret-up={sortSelected === 'name' && !sortOnce}
+							/></th
+						>
+						<th on:click={() => sortTasks('dueAt', false)}
+							>Datum<i
+								class:caret-down={sortSelected === 'dueAt' && sortOnce}
+								class:caret-up={sortSelected === 'dueAt' && !sortOnce}
+							/></th
+						>
+						<th on:click={() => sortTasks('status', false, (a) => a.toUpperCase())}
+							>Status<i
+								class:caret-down={sortSelected === 'status' && sortOnce}
+								class:caret-up={sortSelected === 'status' && !sortOnce}
+							/></th
+						>
+						<th on:click={() => sortTasks('additional_information', false, (a) => a.toUpperCase())}
+							>Zusätzliches<i
+								class:caret-down={sortSelected === 'additional_information' && sortOnce}
+								class:caret-up={sortSelected === 'additional_information' && !sortOnce}
+							/></th
+						>
+						<th>Optionen</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each $tasksFiltered as task}
+						<TaskRow
+							{task}
+							isUrgent={Math.floor((task.dueAt - Date.now()) / ONEDAY) < 1 &&
+								task.is_finished === false}
+							on:deleteTask={toggleDeletion}
+							on:finishTask={finishTask}
+							on:updateTask={updateTaskFromModal}
+							on:openUpdateTask={openUpdateTask}
+						/>
+					{/each}
+				</tbody>
+			</table>
+		{:else}
+			<CalendarView 
+				tasks={$tasksFiltered} 
+				on:openUpdateTask={openUpdateTask}
+			/>
+		{/if}
 	{:else}
 		<h1>Loading Data</h1>
 	{/if}
