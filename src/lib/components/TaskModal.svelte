@@ -1,110 +1,267 @@
 <script lang="ts">
+
 	import { Card, Modal } from 'stwui';
+
 	import { createEventDispatcher } from 'svelte';
+
 	import { getAndCreateTasks } from '$lib/utils/tasks';
+
 	import { updateCreateTask } from '$lib/utils/generalHelpers';
 
+	import { onMount } from 'svelte';
+
+
+
 	export let completionDate = new Date();
+
 	export let taskName: String, taskDescription: String = "";
+
 	export let column_id: number;
+
 	export let buttonText: String = '+ Aufgabe hinzufügen';
+
 	export let status: String;
+
 	export let taskID: number | null = null;
+
+
 
 	const dispatch = createEventDispatcher();
 
+
+
 	function toggleModal() {
+
 		dispatch('toggleModal');
+
 	}
 
+
+
 	const submitForm = async (event) => {
+
 		await updateCreateTask(taskID, status, taskName, completionDate, taskDescription);
+
 		toggleModal();
+
 		getAndCreateTasks();
 
+
+
 		event.target.reset();
+
 		taskName = '';
+
 		taskDescription = '';
-    taskID = null;
+
+		taskID = null;
+
 		completionDate = new Date();
+
 	};
 
 
+
+	let taskNameInput: HTMLInputElement;
+
+	onMount(() => {
+		taskNameInput?.focus();
+	});
+
 </script>
 
+
+
 <Modal handleClose={toggleModal}>
+
 	<Modal.Content slot="content">
+
 		<Card>
-			<Card.Header slot="header">
-				<div class="flex flex-row justify-between">
-					<div class="font-bold">Neue Aufgabe hinzufügen</div>
+
+			<Card.Header slot="header" class="bg-blue-500 text-white p-4 text-lg font-semibold rounded-t-lg">
+
+				<div class="flex flex-row justify-between items-center">
+
+					<div>{taskID ? 'Auftrag bearbeiten' : 'Neue Aufgabe hinzufügen'}</div>
+
 					<button
-						class="transition-color rounded-lg text-gray-400 hover:text-black"
-						on:click={toggleModal}>✖</button
+
+						class="text-white hover:text-gray-200 transition-colors"
+
+						on:click={toggleModal}
+
 					>
+
+						×
+
+					</button>
+
 				</div>
+
 			</Card.Header>
-			<Card.Content slot="content">
-				<form on:submit|preventDefault={submitForm}>
+
+			<Card.Content slot="content" class="p-6">
+
+				<form on:submit|preventDefault={submitForm} class="space-y-4">
+
 					<div>
-						<label for="taskName" class="text-sm font-semibold text-gray-700">Aufgabenname</label>
+
+						<label for="taskName" class="block text-sm font-medium text-gray-700 mb-1">
+
+							Aufgabenname
+
+						</label>
+
 						<input
+
 							type="text"
+
 							id="taskName"
-							placeholder="Redesign Homepage"
-							class="mt-3 w-full rounded-lg border-gray-200 bg-gray-50 text-sm text-gray-600 placeholder:text-gray-400 focus:border-2 focus:border-blue-600"
+
+							placeholder="z.B. Hochzeit Familie Schmidt"
+
+							class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+
 							bind:value={taskName}
+
+							bind:this={taskNameInput}
+
+							required
+
 						/>
+
 					</div>
-					<div class="mt-3">
-						<label for="task-description" class="text-sm font-semibold text-gray-700"
-							>Gebe eine Beschreibung an:</label
-						>
+
+
+
+					<div>
+
+						<label for="task-description" class="block text-sm font-medium text-gray-700 mb-1">
+
+							Beschreibung
+
+						</label>
+
 						<textarea
+
 							name="description"
+
 							id="task-description"
-							placeholder="On line 672 you define $table_variants. Each instance of 'color-level' needs to be changed to 'shift-color'."
-							cols="30"
-							rows="5"
-							class="mt-3 w-full rounded-lg border-gray-200 bg-gray-50 p-3 text-sm text-gray-600 placeholder:text-gray-400 focus:border-2 focus:border-blue-600"
+
+							placeholder="Zusätzliche Informationen zum Auftrag..."
+
+							rows="4"
+
+							class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+
 							bind:value={taskDescription}
+
 						/>
+
 					</div>
-					<div>
-						<input
-							type="date"
-							bind:value={completionDate}
-							class="mt-3 rounded-lg border-gray-200 bg-gray-50"
-						/>
-						<select
-							name="status"
-							id="status"
-							bind:value={status}
-							class="mt-3 rounded-lg border-gray-200 bg-gray-50"
-						>
-							<option class="border-gray-200 bg-gray-50" value="NichtBearbeitet"
-								>Nicht Bearbeitet</option
+
+
+
+					<div class="grid grid-cols-2 gap-4">
+
+						<div>
+
+							<label for="completion-date" class="block text-sm font-medium text-gray-700 mb-1">
+
+								Fertigstellung bis
+
+							</label>
+
+							<input
+
+								type="date"
+
+								id="completion-date"
+
+								bind:value={completionDate}
+
+								class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+
+							/>
+
+						</div>
+
+
+
+						<div>
+
+							<label for="status" class="block text-sm font-medium text-gray-700 mb-1">
+
+								Status
+
+							</label>
+
+							<select
+
+								name="status"
+
+								id="status"
+
+								bind:value={status}
+
+								class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+
 							>
-							<option class="border-gray-200 bg-gray-50" value="Entwickelt">Entwickelt</option>
-							<option class="border-gray-200 bg-gray-50" value="Retuschiert">Retuschiert</option>
-							<option class="border-gray-200 bg-gray-50" value="Gedruckt">Gedruckt</option></select
-						>
+
+								<option value="NichtBearbeitet">RAW</option>
+
+								<option value="Entwickelt">Entwickelt</option>
+
+								<option value="Retuschiert">Retuschiert</option>
+
+								<option value="Gedruckt">Gedruckt</option>
+
+							</select>
+
+						</div>
+
 					</div>
-					<hr class="mt-5 mb-3 w-full" />
-					<div>
+
+
+
+					<div class="flex justify-end gap-3 pt-4">
+
 						<button
-							type="submit"
-							class="rounded-lg border-[1px] border-blue-600 bg-blue-600 px-7 py-[.625rem] text-sm font-semibold text-white transition-colors hover:bg-blue-700"
-							>{buttonText}</button
-						>
-						<button
+
 							type="button"
-							class="ml-3 rounded-lg border-[1px] border-gray-200 px-7 py-[.625rem] text-sm font-semibold text-gray-700 hover:bg-gray-50"
-							on:click={toggleModal}>Schließen</button
+
+							class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors duration-200"
+
+							on:click={toggleModal}
+
 						>
+
+							Abbrechen
+
+						</button>
+
+						<button
+
+							type="submit"
+
+							class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors duration-200"
+
+						>
+
+							{taskID ? 'Speichern' : 'Hinzufügen'}
+
+						</button>
+
 					</div>
+
 				</form>
+
 			</Card.Content>
+
 		</Card>
+
 	</Modal.Content>
+
 </Modal>
+
+
