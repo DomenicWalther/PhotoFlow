@@ -1,6 +1,6 @@
-import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
-import prisma from '$lib/server/prisma';
+import { json } from "@sveltejs/kit";
+import type { RequestHandler } from "./$types";
+import prisma from "$lib/server/prisma";
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
@@ -8,6 +8,6 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		return json(tasks);
 	} catch {
-		return json('Invalid! ');
+		return json("Invalid! ");
 	}
 };

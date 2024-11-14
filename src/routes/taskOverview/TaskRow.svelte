@@ -38,9 +38,21 @@
 
 	function handleStatusChange(event: Event) {
 		const newStatus = (event.target as HTMLSelectElement).value;
+		
 		dispatch('updateTask', { 
-			values: [task.id, task.name, task.dueAt, task.additional_information, newStatus] 
+			values: [
+				task.id, 
+				task.name, 
+				task.dueAt, 
+				task.additional_information, 
+				newStatus,
+				task.orderPath || ''
+			] 
 		});
+	}
+
+	function formatPath(path: string): string {
+		return path.replace(/\\/g, '/');
 	}
 </script>
 
@@ -75,29 +87,43 @@
 	</td>
 	<td>{task.additional_information}</td>
 	<td class="actions">
-		{#if !task.is_finished}
+		<div class="flex items-center gap-2">
+			{#if !task.is_finished}
+				<button
+					on:click={handleFinish}
+					class="action-button finish-button"
+					title="Auftrag abschließen"
+				>
+					✓
+				</button>
+				<button
+					on:click={handleUpdate}
+					class="action-button edit-button"
+					title="Auftrag bearbeiten"
+				>
+					✎
+				</button>
+			{/if}
 			<button
-				on:click={handleFinish}
-				class="action-button finish-button"
-				title="Auftrag abschließen"
+				on:click={handleDelete}
+				class="action-button delete-button"
+				title="Auftrag löschen"
 			>
-				✓
+				×
 			</button>
-			<button
-				on:click={handleUpdate}
-				class="action-button edit-button"
-				title="Auftrag bearbeiten"
-			>
-				✎
-			</button>
-		{/if}
-		<button
-			on:click={handleDelete}
-			class="action-button delete-button"
-			title="Auftrag löschen"
-		>
-			×
-		</button>
+			{#if task.orderPath}
+				<a
+					href="photoflow://open/explorer/{formatPath(task.orderPath)}"
+					class="action-button folder-button"
+					title="Ordner öffnen"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+						<path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1H8a3 3 0 00-3 3v1.5a1.5 1.5 0 01-3 0V6z" clip-rule="evenodd" />
+						<path d="M6 12a2 2 0 012-2h8a2 2 0 012 2v2a2 2 0 01-2 2H2h2a2 2 0 002-2v-2z" />
+					</svg>
+				</a>
+			{/if}
+		</div>
 	</td>
 </tr>
 
@@ -194,6 +220,10 @@
 
 		&.delete-button {
 			@apply bg-red-500 hover:bg-red-600;
+		}
+
+		&.folder-button {
+			@apply bg-blue-500 hover:bg-blue-600;
 		}
 	}
 

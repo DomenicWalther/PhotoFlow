@@ -42,7 +42,7 @@
 
 	let isSettingsModalOpen = false;
 
-	let UpdateTaskValues: [number, string, Date, string, string] = [] as unknown as [number, string, Date, string, string];
+	let UpdateTaskValues: [number, string, Date, string, string, string] = [] as unknown as [number, string, Date, string, string, string];
 
 	let sortSelected = 'dueAt';
 
@@ -98,19 +98,37 @@
 
 		const task = event.detail.task;
 
+		console.log('Opening task for update:', task);
+
 		isUpdateTaskOpen = true;
 
-		UpdateTaskValues = [task.id, task.name, task.dueAt, task.additional_information, task.status];
+		UpdateTaskValues = [
+
+			task.id, 
+
+			task.name, 
+
+			task.dueAt, 
+
+			task.additional_information, 
+
+			task.status,
+
+			task.orderPath || ''
+
+		];
 
 	}
 
 
 
-	function updateTaskFromModal(event: CustomEvent<{values: [number, string, Date, string, string]}>) {
+	function updateTaskFromModal(event: CustomEvent<{values: [number, string, Date, string, string, string]}>) {
 
-		const [id, name, dueAt, extra, status] = event.detail.values;
+		const [id, name, dueAt, extra, status, orderPath] = event.detail.values;
 
-		updateCreateTask(id, status, name, dueAt, extra);
+		console.log('Updating task with values:', { id, name, dueAt, extra, status, orderPath });
+
+		updateCreateTask(id, status, name, dueAt, extra, orderPath);
 
 		toast.success('Auftrag aktualisiert!');
 
@@ -419,6 +437,8 @@
 			status={UpdateTaskValues[4]}
 
 			taskID={UpdateTaskValues[0]}
+
+			orderPath={UpdateTaskValues[5]}
 
 			on:toggleModal={closeUpdateTask}
 

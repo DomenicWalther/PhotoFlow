@@ -14,15 +14,15 @@
 
 	export let completionDate = new Date();
 
-	export let taskName: String, taskDescription: String = "";
+	export let taskName = "";
 
-	export let column_id: number;
+	export let taskDescription = "";
 
-	export let buttonText: String = '+ Aufgabe hinzufügen';
-
-	export let status: String;
+	export let status = "NichtBearbeitet";
 
 	export let taskID: number | null = null;
+
+	export let orderPath = "";
 
 
 
@@ -32,23 +32,55 @@
 
 	function toggleModal() {
 
-		dispatch('toggleModal');
+		dispatch('toggleModal', {
+
+			values: [
+
+				taskID,
+
+				taskName,
+
+				completionDate,
+
+				taskDescription,
+
+				status,
+
+				orderPath
+
+			]
+
+		});
 
 	}
 
 
 
-	const submitForm = async (event) => {
+	const submitForm = async (event: Event) => {
 
-		await updateCreateTask(taskID, status, taskName, completionDate, taskDescription);
+		event.preventDefault();
+
+		await updateCreateTask(
+
+			taskID,
+
+			status,
+
+			taskName,
+
+			completionDate,
+
+			taskDescription,
+
+			orderPath
+
+		);
 
 		toggleModal();
 
 		getAndCreateTasks();
 
-
-
-		event.target.reset();
+		// Reset form
 
 		taskName = '';
 
@@ -57,6 +89,8 @@
 		taskID = null;
 
 		completionDate = new Date();
+
+		orderPath = '';
 
 	};
 
@@ -219,6 +253,32 @@
 							</select>
 
 						</div>
+
+					</div>
+
+
+
+					<div class="mb-4">
+
+						<label for="orderPath" class="block text-sm font-medium text-gray-700 mb-1">
+
+							Ordner-Pfad (Optional)
+
+						</label>
+
+						<input
+
+							type="text"
+
+							id="orderPath"
+
+							bind:value={orderPath}
+
+							class="w-full p-2 border rounded-md"
+
+							placeholder="Z:\Kunde\Auftrag"
+
+						/>
 
 					</div>
 

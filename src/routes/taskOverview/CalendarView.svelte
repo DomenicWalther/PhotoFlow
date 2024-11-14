@@ -9,7 +9,7 @@
     today.setHours(0, 0, 0, 0);
 
     // Calendar state
-    let currentDate = new Date();
+    const currentDate = new Date();
     let currentMonth = currentDate.getMonth();
     let currentYear = currentDate.getFullYear();
 
@@ -19,7 +19,7 @@
     }
 
     function getFirstDayOfMonth(month: number, year: number) {
-        let day = new Date(year, month, 1).getDay();
+        const day = new Date(year, month, 1).getDay();
         return day === 0 ? 6 : day - 1;
     }
 
