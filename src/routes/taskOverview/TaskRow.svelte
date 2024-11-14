@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import type { Task } from '$lib/types/Task';
+	import confetti from 'canvas-confetti';
 
 	export let task: Task;
 	export let isUrgent = false;
@@ -21,6 +22,13 @@
 	}
 
 	function handleFinish() {
+		confetti({
+			particleCount: 100,
+			spread: 160,
+			origin: { y: 0, x: 0.5 },
+			gravity: 1.2,
+			ticks: 300
+		});
 		dispatch('finishTask', { id: task.id });
 	}
 
