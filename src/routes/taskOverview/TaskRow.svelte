@@ -58,7 +58,7 @@
 
 <tr class:urgent={isUrgent} class:finished={task.is_finished}>
 	<td class="task-name">
-		<a href="/task/{task.id}" class="task-link">
+		<a href="/tasks/{task.id}" class="task-link">
 			{task.name}
 			{#if isUrgent}
 				<span class="urgent-badge">Dringend</span>

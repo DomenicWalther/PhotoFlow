@@ -2,7 +2,7 @@
 
 	import { onMount } from 'svelte';
 
-	import { tasks, tasksSearchTerm, tasksFiltered, showFinishedTasks } from '$lib/Stores/TaskStore';
+	import { tasks, tasksSearchTerm, tasksFiltered, showFinishedTasks, tasksFilters } from '$lib/Stores/TaskStore';
 
 	import { sort_by, updateCreateTask } from '$lib/utils/generalHelpers';
 
@@ -32,6 +32,12 @@
 
 	import TaskFilter from '$lib/components/TaskFilter.svelte';
 
+	import type { FilterPreset } from '$lib/types/task';
+
+	import TaskPriorityList from '$lib/components/TaskPriorityList.svelte';
+
+	import TestDataGenerator from '$lib/components/TestDataGenerator.svelte';
+
 
 
 	let openModal = false;
@@ -55,6 +61,11 @@
 	let viewMode: 'table' | 'calendar' = 'table';
 
 	let isFilterOpen = false;
+
+	let startDate: Date | undefined;
+	let endDate: Date | undefined;
+
+	let activePreset: string | null = null;
 
 
 
@@ -362,6 +373,134 @@
 
 	}
 
+
+
+	const filterPresets: FilterPreset[] = [
+
+		{
+
+			id: 'next7days',
+
+			name: 'Nächste 7 Tage',
+
+			filter: {
+
+				dateRange: {
+
+					start: new Date(),
+
+					end: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+
+				}
+
+			}
+
+		},
+
+		{
+
+			id: 'va-tasks',
+
+			name: 'VA Aufträge',
+
+			filter: {
+
+				searchTerm: 'VA'
+
+			}
+
+		}
+
+	];
+
+
+
+	function applyPreset(preset: FilterPreset) {
+
+		if (activePreset === preset.id) {
+
+			searchQuery = '';
+
+			startDate = undefined;
+
+			endDate = undefined;
+
+			activePreset = null;
+
+
+
+			tasksFilters.update(filters => ({
+
+				...filters,
+
+				dateFrom: null,
+
+				dateTo: null
+
+			}));
+
+			return;
+
+		}
+
+
+
+		activePreset = preset.id;
+
+
+
+		if (preset.filter.searchTerm) {
+
+			searchQuery = preset.filter.searchTerm;
+
+		} else {
+
+			searchQuery = '';
+
+		}
+
+
+
+		if (preset.filter.dateRange) {
+
+			startDate = preset.filter.dateRange.start;
+
+			endDate = preset.filter.dateRange.end;
+
+
+
+			tasksFilters.update(filters => ({
+
+				...filters,
+
+				dateFrom: preset.filter.dateRange?.start || null,
+
+				dateTo: preset.filter.dateRange?.end || null
+
+			}));
+
+		} else {
+
+			startDate = undefined;
+
+			endDate = undefined;
+
+
+
+			tasksFilters.update(filters => ({
+
+				...filters,
+
+				dateFrom: null,
+
+				dateTo: null
+
+			}));
+
+		}
+
+	}
+
 </script>
 
 
@@ -380,23 +519,73 @@
 
 
 
-<div class="my-0 mx-auto flex w-10/12 flex-col justify-center pt-10">
+<div class="my-0 mx-auto flex w-10/12 flex-col justify-center pt-4">
 
-	<SearchFilter bind:searchQuery />
+	<div class="flex flex-wrap gap-4 items-center mb-2">
+
+		<div class="flex-grow">
+
+			<SearchFilter bind:searchQuery />
+
+		</div>
+
+		
+
+		<div class="flex gap-2">
+
+			{#each filterPresets as preset}
+
+				<button
+
+					class="px-3 py-1.5 {activePreset === preset.id 
+
+						? 'bg-blue-500 text-white' 
+
+						: 'bg-blue-100 hover:bg-blue-200 text-blue-700'} 
+
+						rounded-md transition-colors duration-200 flex items-center gap-1 text-sm"
+
+					on:click={() => applyPreset(preset)}
+
+				>
+
+					{#if preset.id === 'next7days'}
+
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+
+							<path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+
+						</svg>
+
+					{:else if preset.id === 'va-tasks'}
+
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+
+							<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+
+						</svg>
+
+					{/if}
+
+					{preset.name}
+
+				</button>
+
+			{/each}
+
+		</div>
 
 
-
-	<div class="mb-4 flex justify-between items-center">
 
 		<button
 
 			on:click={() => isFilterOpen = !isFilterOpen}
 
-			class="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors duration-200"
+			class="flex items-center gap-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors duration-200 text-sm"
 
-			>
+		>
 
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
 
 				<path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
 
@@ -410,11 +599,139 @@
 
 
 
-	<TaskFilter bind:isOpen={isFilterOpen} />
+	<TaskFilter 
+
+		bind:isOpen={isFilterOpen} 
+
+		bind:startDate={startDate}
+
+		bind:endDate={endDate}
+
+		bind:searchQuery={searchQuery}
+
+	/>
 
 
 
-	<ViewToggle bind:viewMode />
+	<div class="flex justify-end mb-2">
+
+		<ViewToggle bind:viewMode />
+
+	</div>
+
+
+
+	<div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
+
+		<div class="lg:col-span-3">
+
+			{#if viewMode === 'table'}
+
+				<div class="overflow-x-auto rounded-lg">
+
+					<table class="mb-24 w-full">
+
+						<thead>
+
+							<tr>
+
+								<th class="sortable" on:click={() => sortTasks('name', false, (a) => a.toUpperCase())}>
+
+									Aufträge
+
+									<i class:caret-down={sortSelected === 'name' && sortOnce}
+
+									   class:caret-up={sortSelected === 'name' && !sortOnce} />
+
+								</th>
+
+								<th class="sortable" on:click={() => sortTasks('dueAt', false)}>
+
+									Datum
+
+									<i class:caret-down={sortSelected === 'dueAt' && sortOnce}
+
+									   class:caret-up={sortSelected === 'dueAt' && !sortOnce} />
+
+								</th>
+
+								<th class="sortable" on:click={() => sortTasks('status', false, (a) => a.toUpperCase())}>
+
+									Status
+
+									<i class:caret-down={sortSelected === 'status' && sortOnce}
+
+									   class:caret-up={sortSelected === 'status' && !sortOnce} />
+
+								</th>
+
+								<th class="sortable" on:click={() => sortTasks('additional_information', false, (a) => a.toUpperCase())}>
+
+									Zusätzliches
+
+									<i class:caret-down={sortSelected === 'additional_information' && sortOnce}
+
+									   class:caret-up={sortSelected === 'additional_information' && !sortOnce} />
+
+								</th>
+
+								<th>Optionen</th>
+
+							</tr>
+
+						</thead>
+
+						<tbody>
+
+							{#each $tasksFiltered as task}
+
+								<TaskRow
+
+									{task}
+
+									isUrgent={Math.floor((new Date(task.dueAt).getTime() - Date.now()) / ONEDAY) < 1 &&
+
+										task.is_finished === false}
+
+									on:deleteTask={toggleDeletion}
+
+									on:finishTask={finishTask}
+
+									on:updateTask={updateTaskFromModal}
+
+									on:openUpdateTask={openUpdateTask}
+
+								/>
+
+							{/each}
+
+						</tbody>
+
+					</table>
+
+				</div>
+
+			{:else}
+
+				<CalendarView 
+
+					tasks={$tasksFiltered} 
+
+					on:openUpdateTask={openUpdateTask}
+
+				/>
+
+			{/if}
+
+		</div>
+
+		<div class="lg:col-span-1">
+
+			<TaskPriorityList on:openUpdateTask={openUpdateTask}/>
+
+		</div>
+
+	</div>
 
 
 
@@ -428,19 +745,19 @@
 
 		<TaskModal
 
-			completionDate={UpdateTaskValues[2]}
+				completionDate={UpdateTaskValues[2]}
 
-			taskName={UpdateTaskValues[1]}
+				taskName={UpdateTaskValues[1]}
 
-			taskDescription={UpdateTaskValues[3]}
+				taskDescription={UpdateTaskValues[3]}
 
-			status={UpdateTaskValues[4]}
+				status={UpdateTaskValues[4]}
 
-			taskID={UpdateTaskValues[0]}
+				taskID={UpdateTaskValues[0]}
 
-			orderPath={UpdateTaskValues[5]}
+				orderPath={UpdateTaskValues[5]}
 
-			on:toggleModal={closeUpdateTask}
+				on:toggleModal={closeUpdateTask}
 
 		/>
 
@@ -542,6 +859,10 @@
 
 							</div>
 
+							<div class="mt-4 pt-4 border-t">
+								<TestDataGenerator />
+							</div>
+
 						</div>
 
 					</Card.Content>
@@ -551,112 +872,6 @@
 			</Modal.Content>
 
 		</Modal>
-
-	{/if}
-
-	{#if $tasks !== undefined}
-
-		{#if viewMode === 'table'}
-
-			<div class="overflow-x-auto rounded-lg">
-
-				<table class="mb-24 w-full">
-
-					<thead>
-
-						<tr>
-
-							<th class="sortable" on:click={() => sortTasks('name', false, (a) => a.toUpperCase())}>
-
-								Aufträge
-
-								<i class:caret-down={sortSelected === 'name' && sortOnce}
-
-								   class:caret-up={sortSelected === 'name' && !sortOnce} />
-
-							</th>
-
-							<th class="sortable" on:click={() => sortTasks('dueAt', false)}>
-
-								Datum
-
-								<i class:caret-down={sortSelected === 'dueAt' && sortOnce}
-
-								   class:caret-up={sortSelected === 'dueAt' && !sortOnce} />
-
-							</th>
-
-							<th class="sortable" on:click={() => sortTasks('status', false, (a) => a.toUpperCase())}>
-
-								Status
-
-								<i class:caret-down={sortSelected === 'status' && sortOnce}
-
-								   class:caret-up={sortSelected === 'status' && !sortOnce} />
-
-							</th>
-
-							<th class="sortable" on:click={() => sortTasks('additional_information', false, (a) => a.toUpperCase())}>
-
-								Zusätzliches
-
-								<i class:caret-down={sortSelected === 'additional_information' && sortOnce}
-
-								   class:caret-up={sortSelected === 'additional_information' && !sortOnce} />
-
-							</th>
-
-							<th>Optionen</th>
-
-						</tr>
-
-					</thead>
-
-					<tbody>
-
-						{#each $tasksFiltered as task}
-
-							<TaskRow
-
-								{task}
-
-								isUrgent={Math.floor((new Date(task.dueAt).getTime() - Date.now()) / ONEDAY) < 1 &&
-
-									task.is_finished === false}
-
-								on:deleteTask={toggleDeletion}
-
-								on:finishTask={finishTask}
-
-								on:updateTask={updateTaskFromModal}
-
-								on:openUpdateTask={openUpdateTask}
-
-							/>
-
-						{/each}
-
-					</tbody>
-
-				</table>
-
-			</div>
-
-		{:else}
-
-			<CalendarView 
-
-				tasks={$tasksFiltered} 
-
-				on:openUpdateTask={openUpdateTask}
-
-			/>
-
-		{/if}
-
-	{:else}
-
-		<h1>Loading Data</h1>
 
 	{/if}
 
@@ -917,6 +1132,52 @@
 			@apply opacity-90;
 
 		}
+
+	}
+
+
+
+	.presets {
+
+		margin-bottom: 1rem;
+
+	}
+
+
+
+	.preset-buttons {
+
+		display: flex;
+
+		gap: 0.5rem;
+
+		flex-wrap: wrap;
+
+	}
+
+
+
+	.preset-button {
+
+		padding: 0.5rem 1rem;
+
+		background-color: #f0f0f0;
+
+		border: 1px solid #ddd;
+
+		border-radius: 4px;
+
+		cursor: pointer;
+
+		transition: background-color 0.2s;
+
+	}
+
+
+
+	.preset-button:hover {
+
+		background-color: #e0e0e0;
 
 	}
 

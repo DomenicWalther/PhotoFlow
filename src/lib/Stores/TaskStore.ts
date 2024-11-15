@@ -12,7 +12,12 @@ interface TaskFilters {
 	isAndFilter: boolean;
 }
 
-export const tasksFilters = writable<TaskFilters>({
+export const tasksFilters = writable<{
+	dateFrom: Date | null;
+	dateTo: Date | null;
+	status: string;
+	isAndFilter: boolean;
+}>({
 	dateFrom: null,
 	dateTo: null,
 	status: "",
@@ -20,56 +25,51 @@ export const tasksFilters = writable<TaskFilters>({
 });
 
 export const tasksFiltered = derived(
-	[tasks, tasksSearchTerm, showFinishedTasks, tasksFilters],
-	([$tasks, $searchTerm, $showFinished, $filters]) => {
+	[tasks, tasksSearchTerm, tasksFilters, showFinishedTasks],
+	([$tasks, $searchTerm, $filters, $showFinishedTasks]) => {
 		return $tasks.filter((task) => {
-			const taskDate = new Date(task.dueAt);
-			taskDate.setHours(0, 0, 0, 0);
+			if ($showFinishedTasks && !task.is_finished) return false;
+			if (!$showFinishedTasks && task.is_finished) return false;
 
-			let matchesDateFrom = true;
-			let matchesDateTo = true;
+			const searchMatch = $searchTerm
+				? task.name.toLowerCase().includes($searchTerm.toLowerCase()) ||
+					task.additional_information
+						.toLowerCase()
+						.includes($searchTerm.toLowerCase())
+				: true;
 
-			if ($filters.dateFrom) {
-				const fromDate = new Date($filters.dateFrom);
-				fromDate.setHours(0, 0, 0, 0);
-				matchesDateFrom = taskDate.getTime() >= fromDate.getTime();
-			}
-
-			if ($filters.dateTo) {
-				const toDate = new Date($filters.dateTo);
-				toDate.setHours(0, 0, 0, 0);
-				matchesDateTo = taskDate.getTime() <= toDate.getTime();
-			}
-
-			const matchesSearch =
-				task.name.toLowerCase().includes($searchTerm.toLowerCase()) ||
-				task.additional_information
-					.toLowerCase()
-					.includes($searchTerm.toLowerCase());
-			const matchesFinished = $showFinished ? true : !task.is_finished;
-			const matchesStatus = $filters.status
+			const statusMatch = $filters.status
 				? task.status === $filters.status
 				: true;
 
-			if ($filters.isAndFilter) {
-				// AND Logik
-				return (
-					matchesSearch &&
-					matchesFinished &&
-					matchesDateFrom &&
-					matchesDateTo &&
-					matchesStatus
-				);
-			} else {
-				// OR Logik
-				const hasDateFilter = $filters.dateFrom || $filters.dateTo;
-				const dateMatches = hasDateFilter
-					? matchesDateFrom && matchesDateTo
-					: false;
-				const statusMatches = $filters.status ? matchesStatus : false;
+			const dateMatch = (() => {
+				if (!$filters.dateFrom && !$filters.dateTo) return true;
 
+				const taskDate = new Date(task.dueAt);
+				taskDate.setHours(12, 0, 0, 0);
+
+				if ($filters.dateFrom) {
+					const fromDate = new Date($filters.dateFrom);
+					fromDate.setHours(0, 0, 0, 0);
+					if (taskDate < fromDate) return false;
+				}
+
+				if ($filters.dateTo) {
+					const toDate = new Date($filters.dateTo);
+					toDate.setHours(23, 59, 59, 999);
+					if (taskDate > toDate) return false;
+				}
+
+				return true;
+			})();
+
+			if ($filters.isAndFilter) {
+				return searchMatch && statusMatch && dateMatch;
+			} else {
 				return (
-					matchesSearch && matchesFinished && (dateMatches || statusMatches)
+					searchMatch ||
+					statusMatch ||
+					($filters.dateFrom || $filters.dateTo ? dateMatch : false)
 				);
 			}
 		});

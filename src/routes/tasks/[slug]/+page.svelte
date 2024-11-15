@@ -23,16 +23,22 @@
 	};
 </script>
 
-<div class="overflow-hidden bg-white pt-5 shadow sm:rounded-lg">
-	<a href="/taskOverview" class="mt-5 py-5 px-4 text-sm font-medium leading-6 text-gray-900 sm:px-6"
-		><button class="buttonstyle">Zurück zur Übersicht</button>
-	</a>
-	<div class="px-4 py-5 sm:px-6">
-		<h3 class="text-lg font-medium leading-6 text-gray-900">Kunden Informationen</h3>
-		<p class="mt-1 max-w-2xl text-sm text-gray-500">Auftragsdetails</p>
-	</div>
-	<div class="border-t border-gray-200">
-		<dl>
+<div class="my-0 mx-auto flex w-10/12 flex-col justify-center pt-4">
+	<div class="overflow-hidden bg-white shadow rounded-lg">
+		<div class="flex justify-between items-center p-4 border-b border-gray-200">
+			<a href="/taskOverview">
+				<button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors duration-200">
+					Zurück zur Übersicht
+				</button>
+			</a>
+		</div>
+
+		<div class="px-6 py-5">
+			<h3 class="text-lg font-medium text-gray-900">Kunden Informationen</h3>
+			<p class="mt-1 text-sm text-gray-500">Auftragsdetails</p>
+		</div>
+
+		<dl class="divide-y divide-gray-200">
 			<TaskRow
 				label="Kundenname"
 				data={data.tasks?.task.charAt(0).toUpperCase() + data.tasks?.task.slice(1)}
@@ -45,40 +51,34 @@
 				isDark
 			/>
 
-			<div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-				<div class="max-w-lg ">
-					<form on:submit|preventDefault={submitComment} class="w-full p-4">
-						<label class="mb-2 block">
-							<span class="text-gray-600">Füge einen Kommentar hinzu:</span>
-							<textarea class="mt-1 block w-full rounded" rows="3" bind:value={comment} />
-						</label>
-						<button class="buttonstyle">Kommentieren</button>
-					</form>
-				</div>
+			<div class="px-6 py-4 bg-gray-50">
+				<form on:submit|preventDefault={submitComment} class="max-w-lg">
+					<label class="block mb-2">
+						<span class="text-gray-700">Füge einen Kommentar hinzu:</span>
+						<textarea 
+							class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+							rows="3" 
+							bind:value={comment}
+						/>
+					</label>
+					<button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors duration-200">
+						Kommentieren
+					</button>
+				</form>
 			</div>
 
-			<div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-				<dt class="text-m mt-1 text-gray-900">Activity</dt>
+			<div class="px-6 py-4">
+				<h4 class="text-base font-medium text-gray-900">Activity</h4>
+				{#if data.comments}
+					{#each data.comments as comment}
+						<Comment {comment} {data} />
+					{/each}
+				{/if}
 			</div>
-			{#if data.comments}
-				{#each data.comments as comment}
-					<Comment {comment} {data} />
-				{/each}
-			{/if}
 		</dl>
 	</div>
 </div>
 
-<style lang="postcss">
-	.optiontext {
-		@apply text-xs font-medium text-gray-800;
-	}
-
-	.buttonstyle {
-		@apply rounded bg-blue-600 px-3 py-2 text-sm text-blue-100 transition-colors;
-	}
-
-	.buttonstyle:hover {
-		@apply bg-blue-700 transition-colors;
-	}
+<style>
+	/* Remove existing styles as they're now handled by Tailwind classes */
 </style>
