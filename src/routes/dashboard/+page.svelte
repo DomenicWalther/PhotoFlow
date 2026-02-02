@@ -34,7 +34,7 @@
 	};
 	const updateKanbanDatabase = (card: KanbanCard) => {
 		const { id, dueAt, task, additional_information, taskColumn, status } = card;
-		updateCreateTask(id, status, task, dueAt, additional_information, taskColumn);
+		updateCreateTask(id, status, task, dueAt, additional_information, false, taskColumn);
 	};
 </script>
 

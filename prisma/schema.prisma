@@ -16,6 +16,8 @@ model task_comments {
   task       Tasks    @relation(fields: [task_id], references: [id], onDelete: Cascade)
   task_id    Int
   comment    String
+
+  @@map("task_comments")
 }
 
 model Tasks {
@@ -29,4 +31,6 @@ model Tasks {
   task_comments          task_comments[]
   amount_of_comments     Int             @default(0)
   taskColumn            String   @default("1")
+
+  @@map("Tasks")
 }

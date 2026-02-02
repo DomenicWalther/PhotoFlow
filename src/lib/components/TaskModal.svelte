@@ -4,7 +4,11 @@
 	import { getAndCreateTasks } from '$lib/utils/tasks';
 	import { updateCreateTask } from '$lib/utils/generalHelpers';
 
-	export let completionDate = new Date();
+	export let completionDate: string | Date = new Date().toISOString().split('T')[0];
+
+$: completionDateString = completionDate instanceof Date 
+    ? completionDate.toISOString().split('T')[0] 
+    : completionDate;
 	export let taskName: String, taskDescription: String = "";
 	export let column_id: number;
 	export let buttonText: String = '+ Aufgabe hinzufügen';
@@ -17,8 +21,8 @@
 		dispatch('toggleModal');
 	}
 
-	const submitForm = async (event) => {
-		await updateCreateTask(taskID, status, taskName, completionDate, taskDescription);
+const submitForm = async (event) => {
+		await updateCreateTask(taskID, status, taskName, completionDateString, taskDescription);
 		toggleModal();
 		getAndCreateTasks();
 
@@ -26,7 +30,7 @@
 		taskName = '';
 		taskDescription = '';
     taskID = null;
-		completionDate = new Date();
+		completionDateString = new Date().toISOString().split('T')[0];
 	};
 
 
@@ -71,9 +75,9 @@
 						/>
 					</div>
 					<div>
-						<input
+<input
 							type="date"
-							bind:value={completionDate}
+							bind:value={completionDateString}
 							class="mt-3 rounded-lg border-gray-200 bg-gray-50"
 						/>
 						<select

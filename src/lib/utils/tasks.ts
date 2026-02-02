@@ -8,7 +8,7 @@ async function getAndCreateTasks() {
 
 function createTasks(data) {
 	let tasksValue = get(tasks);
-	if (data !== 'Not found') {
+	if (Array.isArray(data)) {
 		tasksValue = data.map((i) => {
 			return {
 				name: i.task,
