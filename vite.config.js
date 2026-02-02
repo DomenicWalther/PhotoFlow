@@ -7,12 +7,15 @@ const config = {
 		{
 			name: 'sveltekit-socketio',
 			configureServer(server) {
-				const io = new Server(3000, {
+				if (!server.httpServer) return;
+				
+				const io = new Server(server.httpServer, {
 					cors: {
 						origin: 'http://192.168.178.24:5173',
 						methods: ['GET', 'POST']
 					}
 				});
+				
 				io.on('connection', (socket) => {
 					socket.on('database-change', (msg) => {
 						io.emit('database-changed', msg);
@@ -20,10 +23,7 @@ const config = {
 				});
 			}
 		}
-	],
-	define: {
-		'process.env': process.env
-	}
+	]
 };
 
 export default config;
