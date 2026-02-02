@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 /**
  * Returns a custom comparison function for sorting an array of objects by a specified field.
  * @param {string} field - The field by which to sort the array of objects.
@@ -13,7 +11,7 @@ import moment from 'moment';
 
  */
 
-export const sort_by = (field: string, reverse: Boolean | Number, primer: Function) => {
+export const sort_by = (field: string, reverse: boolean | number, primer: Function) => {
     const key = primer
         ? function(x) {
             return primer(x[field]);
@@ -43,7 +41,7 @@ export async function updateCreateTask(
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             taskID,
-            dueAt: moment(taskDueAt).format('YYYY-MM-DD'),
+            dueAt: new Date(taskDueAt).toISOString().split('T')[0],
             task: taskName,
             additional_information: taskDescription,
             status: taskStatus,
