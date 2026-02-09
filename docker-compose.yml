@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: photoflow_postgres
+    environment:
+      POSTGRES_USER: photoflow
+      POSTGRES_PASSWORD: photoflow_password
+      POSTGRES_DB: photoflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U photoflow -d photoflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: photoflow_app
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://photoflow:photoflow_password@postgres:5432/photoflow
+      - NODE_ENV=production
+      - VITE_SOCKET_URL=http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
