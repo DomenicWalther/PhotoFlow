@@ -6,10 +6,8 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 
-COPY .env.docker ./.env
 COPY prisma ./prisma/
 RUN npx prisma generate
-RUN rm ./.env
 
 FROM base AS builder
 WORKDIR /app
