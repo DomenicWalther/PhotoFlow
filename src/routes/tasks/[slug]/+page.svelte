@@ -70,6 +70,8 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.optiontext {
 		@apply text-xs font-medium text-gray-800;
 	}
