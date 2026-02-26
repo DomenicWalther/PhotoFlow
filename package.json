@@ -27,13 +27,14 @@
 		"sass": "^1.97.3",
 		"stwui": "^0.21.2-next",
 		"svelte": "^4.2.12",
-		"tailwindcss": "^3.4.1",
+		"tailwindcss": "^4.2.1",
 		"vite": "^5.1.5"
 	},
 	"type": "module",
 	"dependencies": {
 		"@prisma/client": "^5.10.2",
 		"@sveltejs/vite-plugin-svelte": "^3.1.2",
+		"@tailwindcss/vite": "^4.2.1",
 		"papaparse": "^5.5.3",
 		"qrcode": "^1.5.4",
 		"socket.io": "^4.8.3",

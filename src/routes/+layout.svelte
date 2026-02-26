@@ -1,5 +1,5 @@
 <script>
-	import '../app.postcss';
+	import '../style.css';
 	import 'fluent-svelte/theme.css';
 </script>
 
